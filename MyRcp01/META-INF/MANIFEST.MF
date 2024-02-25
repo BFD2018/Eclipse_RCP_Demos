@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: MyRcp01
+Bundle-SymbolicName: MyRcp01;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: myrcp01.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.apache.felix.scr,
+ org.eclipse.equinox.event
+Bundle-RequiredExecutionEnvironment: JavaSE-16
+Automatic-Module-Name: MyRcp01
+Bundle-ActivationPolicy: lazy
