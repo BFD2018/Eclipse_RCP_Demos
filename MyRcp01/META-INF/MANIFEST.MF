@@ -1,13 +1,18 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MyRcp01
-Bundle-SymbolicName: MyRcp01;singleton:=true
+Bundle-SymbolicName: com.xiong.mycrp01;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: myrcp01.Activator
+Bundle-Activator: com.xiong.myrcp01.main.MyRCPActivator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.apache.felix.scr,
- org.eclipse.equinox.event
+ org.eclipse.equinox.event,
+ org.eclipse.core.databinding;bundle-version="1.13.100",
+ org.eclipse.core.databinding.beans;bundle-version="1.10.100",
+ org.eclipse.core.databinding.property;bundle-version="1.10.100",
+ org.eclipse.jface.databinding;bundle-version="1.15.100"
 Bundle-RequiredExecutionEnvironment: JavaSE-16
 Automatic-Module-Name: MyRcp01
 Bundle-ActivationPolicy: lazy
+Bundle-Vendor: Xiong

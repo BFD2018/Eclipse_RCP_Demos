@@ -1,0 +1,905 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> <html xmlns=http://www.w3.org/1999/xhtml xml:lang=zh-CN dir=ltr style><!--
+ Page saved with SingleFile 
+ url: https://www.iteye.com/blog/chnic-2203008 
+ saved date: Mon Feb 26 2024 21:12:37 GMT+0800 (中国标准时间)
+--><meta charset=utf-8>
+<title>
+ 使用Tycho来构建你的RCP程序(六) —— Configuration - 少壮不努力 老大留内地 - ITeye博客
+ </title>
+<meta name=description content="  经过前面的五篇之后，我相信你已经可以熟练的操作使用Tycho来构建你的RCP程序了。RCP开发其实在Java开发当中是非常非常小众的东西。小众的东西注定了资料少而且即便有也是英文的，这一篇会介绍Tycho的一些general configuration，希望能帮到有需要的朋友。  &nbsp;  1.在Tycho build当中我们在控制台上发现很多的关于enconding的warning  写道  [W ...">
+<meta name=keywords content="RCP, Build, Maven, Tycho, Configuration 使用Tycho来构建你的RCP程序(六) —— Configuration ">
+<meta name=report content='{"pid":"iteye"}'>
+<link rel=search type=application/opensearchdescription+xml href=https://www.iteye.com/open_search.xml title=ITeye>
+<link href=https://www.iteye.com/rss rel=alternate title="少壮不努力 老大留内地" type=application/rss+xml>
+<style>:root{--sf-img-14: url("data:image/gif;base64,R0lGODlhMAAwAMQAAOXl5eTk5Pv7++np6efn5/Pz8+bm5vz8/PHx8evr6+jo6PLy8vj4+O/v7/r6+vn5+e3t7f39/fT09P7+/vf39/X19fb29uzs7PDw8O7u7urq6v///+Pj4wAAAAAAAAAAACH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4wLWMwNjAgNjEuMTM0Nzc3LCAyMDEwLzAyLzEyLTE3OjMyOjAwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IFdpbmRvd3MiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MkIzMkFGRUQ1QUFEMTFFMDk2MEJERjMwQTkyQzUyNDYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MkIzMkFGRUU1QUFEMTFFMDk2MEJERjMwQTkyQzUyNDYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDoyQjMyQUZFQjVBQUQxMUUwOTYwQkRGMzBBOTJDNTI0NiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoyQjMyQUZFQzVBQUQxMUUwOTYwQkRGMzBBOTJDNTI0NiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PgH//v38+/r5+Pf29fTz8vHw7+7t7Ovq6ejn5uXk4+Lh4N/e3dzb2tnY19bV1NPS0dDPzs3My8rJyMfGxcTDwsHAv769vLu6ubi3trW0s7KxsK+urayrqqmop6alpKOioaCfnp2cm5qZmJeWlZSTkpGQj46NjIuKiYiHhoWEg4KBgH9+fXx7enl4d3Z1dHNycXBvbm1sa2ppaGdmZWRjYmFgX15dXFtaWVhXVlVUU1JRUE9OTUxLSklIR0ZFRENCQUA/Pj08Ozo5ODc2NTQzMjEwLy4tLCsqKSgnJiUkIyIhIB8eHRwbGhkYFxYVFBMSERAPDg0MCwoJCAcGBQQDAgEAACH5BAAAAAAALAAAAAAwADAAAAX/ICeOZGmeaKqubOu+cCzPdG3feK7vfO//wKBwSCwafQSL4lgiPBgZJknCYBQCUtEFUZAkEgTCd5xYigAEgygwGJg5gIFGDQ+vAobDBoHY+P8FHAQSBxERDAkcDBsRZhR+CgAFhREPECoAAhsYGH9/CAaanhsQCn4UHBB+CwEPo3spmXtxqhsLCgaPGwIFuhMGC34NDhsHAQV+BwUWE34aKLILIqYbUdQPBg0LFX4IAXp/EAERxQQQBcgbFdCa0hwDwql+EATdDhESHBl/DO/dAX4KMIiA6kQ0EfA2NOBwQVgrBwMAGAAgYtGEAf42BLIgIAEeigbbIYxHoNkBjHSmZ2xwcEZPhEQpY4nMuJADtw0THgi4UELCSiwc+vh54ADDCgB63CWsCWDRnwMgRXATADSABU8TCGCy4KCmAqI81zRgIOBBgahBHVQAKgICBQFqtWaZS7eu3bt48+rdy7ev37+AAwuWEQIAOw==");--sf-img-15: url("data:image/png;base64,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")}</style><style media=screen>.clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden}.clearfix{display:block}body{font-family:Helvetica,Tahoma,Arial,sans-serif;font-size:12px;line-height:1.5;color:black}img{border:0}h3{font-size:1.2em;line-height:1.5em;margin:0 0 0.5em 0;padding:0;color:black}h5{font-size:1.1em;line-height:1.3em;margin:0 0 0.25em 0;padding:0;color:black}p{margin:0;padding:0}pre{font-family:monospace;font-size:1.0em}strong{font-weight:bold}em,i{font-style:italic}ul{margin:0 0 1.5em 0;padding:0}ul li{margin:0 0 0.25em 30px;padding:0}ol{font-size:1.0em;line-height:1.4em;margin:0 0 1.5em 0;padding:0}ol li{font-size:1.0em;margin:0 0 0.25em 30px;padding:0}dl{margin:0 0 1.5em 0;padding:0;line-height:1.4em}dl dt{margin:0.25em 0 0.25em 0;padding:0}dl dd{margin:0 0 0 30px;padding:0}div#content{padding:0;text-align:left}div#local{float:left}body{margin:0;padding:0;background:white;text-align:center}div#page{margin:10px auto 0;padding:0;background:white;text-align:center}div#header{padding:0;color:white;background-color:white}div#footer{color:black;background-color:white}a{color:#006699;text-decoration:none}a:hover,a:active{color:#BC2A4D;text-decoration:underline}div#user_nav{margin:3px 0 0 0;padding:2px;text-align:right;float:right}div#user_nav a.welcome{color:#E28822;font-weight:bold;padding-right:10px}div#user_nav a:hover.welcome{text-decoration:none;color:#E28822;background-color:transparent}div#user_nav a{text-decoration:none;padding:2px 6px 1px 6px;color:gray;line-height:1em;background-image:url(data:image/gif;base64,R0lGODlhAQALAIAAAMzMzP///yH5BAAHAP8ALAAAAAABAAsAAAIDhI9QADs=);background-position:right center;background-repeat:no-repeat}div#user_nav a:hover{text-decoration:underline;color:white;background-color:gray}div.quote_title{font-weight:bold;padding:5px;margin:5px 0 0 15px}div.quote_div{border:1px solid #ccc;margin:0 5px 5px 15px;padding:3px;background:#fafafa}div.logo{float:left;padding:2px 6px 6px 2px;background-image:url(data:image/gif;base64,R0lGODlhOAA4ALMAAMzMzPDw8NXV1f///93d3ff39+bm5tnY3f///wAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEHAAgALAAAAAA4ADgAAAT/EB1Aq704610P+t80jGRpnmiqkoAHAgMoz3Rt3/QABG+M/8AgQmcofGDCpBKkIwSMyKUUqBMUEdGptlZ1Yn3bMBMgcBay4nD3iU5r12ew+002t+dL+B2f1Mv5Sn6AU4KDeXVsf4ZUiHGLgY17jzaFk4xliZZBlZo3nJ1ckYqgMp+kpaKnlKmqOaytqJiOsLF2o6qmrbm4r7RDvbS7p8KkxKDGnciaypbMk86P0IvShtSD1oDYfNp43HPebnAiK+Tl5jqNEhzr7O0VZWYfAQYEAvb3+Pn6+/z99gQGnoCYR6CgwYMIEypcyLBgQIEDA0icSLGixYsYM1IsYEQGx48gCEOKHEmy5MgIADs=);background-repeat:no-repeat}.left{float:left}div#header{z-index:2}.logo a:hover{background-color:inherit}.news_tag{clear:both;display:block;margin:10px 0 5px 0;line-height:20px}.news_tag:after{content:".";display:block;height:0;clear:both;visibility:hidden}.news_tag a{display:inline-block;margin:0 5px 5px 0;padding:0px 10px;background-color:#aab5c3;-webkit-border-radius:10px;-moz-border-radius:10px;-o-border-radius:10px;border-radius:10px;color:#fff;text-decoration:none}.news_tag a:hover,#suggested_tags_panel a.added{background-color:#f87b00}div#page{width:100%}div#header{height:30px}div#header,div#content{margin:0 auto;width:1223px;position:relative}div#blog_site_nav{float:left;margin-top:3px}div#blog_site_nav a.homepage{background-image:url(data:image/gif;base64,R0lGODlhSQAVAMQAAMfT3ixZg/H09+Pp7qq8zTpkjNXe5nORrbjH1khvlGWGpIGctZyxxeGHaddbMt98W9xxTeyyn9RQJPz08eedhPTTyOSSdumnkfrp5O+9rffe1o6mvVZ6nB5Oe////wAAACH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4wLWMwNjAgNjEuMTM0Nzc3LCAyMDEwLzAyLzEyLTE3OjMyOjAwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IFdpbmRvd3MiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6Q0ZEMjQ1MjY1QUFCMTFFMDgzM0FBNzMwNkNBMkU5MUUiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6Q0ZEMjQ1Mjc1QUFCMTFFMDgzM0FBNzMwNkNBMkU5MUUiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpDRkQyNDUyNDVBQUIxMUUwODMzQUE3MzA2Q0EyRTkxRSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpDRkQyNDUyNTVBQUIxMUUwODMzQUE3MzA2Q0EyRTkxRSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PgH//v38+/r5+Pf29fTz8vHw7+7t7Ovq6ejn5uXk4+Lh4N/e3dzb2tnY19bV1NPS0dDPzs3My8rJyMfGxcTDwsHAv769vLu6ubi3trW0s7KxsK+urayrqqmop6alpKOioaCfnp2cm5qZmJeWlZSTkpGQj46NjIuKiYiHhoWEg4KBgH9+fXx7enl4d3Z1dHNycXBvbm1sa2ppaGdmZWRjYmFgX15dXFtaWVhXVlVUU1JRUE9OTUxLSklIR0ZFRENCQUA/Pj08Ozo5ODc2NTQzMjEwLy4tLCsqKSgnJiUkIyIhIB8eHRwbGhkYFxYVFBMSERAPDg0MCwoJCAcGBQQDAgEAACH5BAAAAAAALAAAAABJABUAAAX/oCeO3mQ1ZKqubOu+reY41ATfeI5DtBPpwKAuI7lIGj+hcqlqQBqPB4RJrVYqDwxnS/Bsv2COgWRgbDaI0QA8IDG+i5GAcCa0lZ38xpPv+zsAIgAFfwF7Xn0KcgF9aQIHfx0cd0B9e5F+gQSYeRwCA5kikJ0eBoyYAWOVenycgAiueYobfQUeAH4DAoSuAZQ4liQcfYEivJ0bo8S7fQwJwbS1CxvHHQerHYciw3nFm31ddAinHYqwkQUCHuQJnxsEyh3qOcEj3IAiC33X0QHfHQG2RUpjwM+nUwyOpaHHyh4xgXnS3MPVRwQoPxwE9clIUZK+hsBAIuoGsUOXfvNSfETLo6pjAg8CTnXBI3KiiJUvPdD5RUJAnzgWQw3YUIxmNmEPS/lRcEfVinoinuUJUMypEKgj8ZXM8yxAyhRYz/UJQEhbEKw2LZLzc+2pSA/xxn7VgTapCAPV7JLAKgpT27M19cKkNvYATxF8BSnwk2BmlRwCABwOYsAqixAAOw==);background-position:left center;background-repeat:no-repeat;padding-left:77px}div#blog_site_nav a{padding:3px 5px;line-height:2.2em}div#local{overflow:hidden}div#local h5{margin-left:10px}div#local li{margin-left:25px;line-height:2.1em;list-style:square}div#content{margin-top:5px}div#local{width:200px;border:1px black solid;padding:10px 3px 0 3px;margin:0px 8px 0 0}div#main{width:706px;float:left;border:1px solid;padding:5px 12px;overflow:hidden}.blog-sidebar{float:right;width:300px;margin-left:8px;border:1px solid}.blog-sidebar .recommend-right .recommend-fixed-box{background:#fff}#blog_owner{text-align:center;padding:0 13px}div#blog_owner_logo{border:1px solid #ccc;padding:10px}div#blog_owner_logo img{width:120px!important}#blog_owner_name{padding-top:5px;font-weight:bolder}#user_visits{margin-bottom:20px}#user_visits div.left{width:75px;overflow:hidden}div.user_visit{float:left;width:75px;height:90px;margin:10px 0 0 5px;overflow:hidden}#blog_actions{margin-bottom:20px}#blog_actions ul li{list-style:none;margin-left:10px}div.blog_nav{right:20px;margin-bottom:15px}div.pre_next{float:right;text-align:right;padding-top:5px}div.pre_next a{padding:0 15px;background-repeat:no-repeat}div.pre_next a.next{background-image:url(data:image/gif;base64,R0lGODlhCAALAJEAAKSkpP///////wAAACH5BAEHAAIALAAAAAAIAAsAAAIRlI8HkMvqYBRu0opwXun2UwAAOw==);background-position:left center}div.pre_next a.pre{background-image:url(data:image/gif;base64,R0lGODlhCAALAJEAAKOjo////////wAAACH5BAEHAAIALAAAAAAIAAsAAAIRlH8AaLroXospPlsV1Jt5UwAAOw==);background-position:right center}.blog_main{margin:auto;border-bottom:1px dotted;padding:10px 11px 15px;margin-bottom:10px}.blog_title{margin-bottom:15px}.blog_bottom{padding:15px 0 5px 0}.blog_bottom li{list-style:none;display:inline;float:left;margin:0 10px 0 0;padding-right:10px;border-right:1px solid}.blog_bottom li.last{border-right:none}.blog_bottom a.more{padding-right:50px;background-repeat:no-repeat;background-image:url(data:image/gif;base64,R0lGODlhKgALAIAAANl3Lv///yH5BAAHAP8ALAAAAAAqAAsAAAI/jI+pywsPo5y0RmOzzpjDACQhMh5T94ASxn6hq1bouL5gfJPiGtMXDHwJZb1eCqZL5Uy8jfPpg0opjar1GigAADs=);background-position:right center}.blog_comment{margin-top:15px;padding:15px;border-top:1px solid gray;width:685px}.comment_title,.comment_content{padding:3px}.comment_content{margin-bottom:10px}#share_weibo{display:inline-block;float:right;width:160px;height:32px;margin:0;padding:27px 5px 0 0;background:none;color:#333;font:normal 12px/32px Arial,Helvetica,sans-serif!important;text-align:right;cursor:auto}#share_weibo img{margin:0 5px}#share_weibo a{background:transparent}div.blog_title h3{font-size:16px;padding-top:10px}ul.blog_categories{list-style-type:none;margin:0}ul.blog_categories li{list-style-type:none;display:inline;padding:0;margin:0 5px 0 0}div#blog_content{font-size:14px;line-height:1.8em}#guest_books li{margin-left:10px!important;list-style:none!important;padding:12px 0 5px 0;border-bottom:1px #CCC dotted}</style>
+<style media=screen>a{color:#108AC6;text-decoration:underline}a:hover{color:white}div#page,.comment_title{background-color:#effaff}div#local,div#main,.blog_main,.blog-sidebar{background-color:white;border-color:#108AC6}div.nav,div#app_list div.decorate,a:hover,div#branding,input.button,input.submit,td.buttons a,.pagination span.current{background-color:#108AC6}.blog_bottom li{border-right-color:#108AC6;color:#108AC6}.blog_comment{border-top-color:#108AC6}</style>
+<style>.hide-main-content{position:relative}.hide-article-box{position:absolute;z-index:9999;bottom:-1px;width:100%;padding-top:160px;background-image:-webkit-gradient(linear,left top,left bottom,from(rgba(255,255,255,0)),color-stop(70%,#fff));background-image:linear-gradient(-180deg,rgba(255,255,255,0) 0%,#fff 70%)}</style>
+<style media=screen>.dp-highlighter{font-family:Monaco,DejaVu Sans Mono,Bitstream Vera Sans Mono,Consolas,Courier New,monospace;font-size:12px;background-color:transparent;width:97%;overflow:auto;margin-left:9px;padding:1px;word-break:break-all;word-wrap:break-word}.dp-highlighter ol{border:1px solid #D1D7DC;list-style:decimal;background-color:#fff;margin:0px 0px 1px 0px;padding:2px 0;color:#2B91AF}.dp-highlighter ol li{border-left:1px solid #D1D7DC;background-color:#FAFAFA;padding-left:10px;line-height:18px;margin:0 0 0 38px}.dp-highlighter ol li span{color:Black}.dp-highlighter .tools{padding:3px;text-align:left;margin:0;color:black;font-weight:bold}</style>
+<link ref=canonical href=https://www.iteye.com/blog/chnic-2203008>
+<style>.dp-xml .tag,.dp-xml .tag-name{color:#069;font-weight:bold}.dp-xml .attribute{color:red}.dp-xml .attribute-value{color:blue}</style><style>body,dd,div,dl,dt,h3,h5,html,input,li,ol,p,ul{margin:0;padding:0}*{box-sizing:border-box}body,html{min-height:100%}h3,h5{font-weight:400}.recommend-right ul,ol{list-style:none}.recommend-right a{text-decoration:none;color:#232323}.clearfix:after{content:" ";display:block;height:0;visibility:hidden;clear:both}.newbox.recommend{overflow:hidden}svg.icon{width:1em;height:1em;vertical-align:-.15em;fill:currentColor;overflow:hidden;margin-right:4px}.recommend-right{float:right;width:300px;margin-left:8px;background-color:#fff;-webkit-box-shadow:0 2px 4px 0 rgba(0,0,0,.05);box-shadow:0 2px 4px 0 rgba(0,0,0,.05)}.recommend-right .recommend-fixed-box{background-color:#fff}.recommend-right .right-item{padding:8px 0;overflow:hidden;word-break:break-all;margin-left:8px;margin-right:8px;border-bottom:1px solid #f5f5f5;box-sizing:border-box}.recommend-right .right-item:hover .content h5{color:#ca0c16}.recommend-right .right-item .content{margin-bottom:4px}.recommend-right .right-item .content h5{display:block;font-size:14px;color:#5c5c5c;letter-spacing:0;line-height:20px;max-width:100%;max-height:44px;overflow:hidden;font-weight:500;margin-right:4px;white-space:nowrap;text-overflow:ellipsis}.recommend-right .right-item .content span{margin-right:8px;font-size:12px;color:#999;letter-spacing:0;line-height:20px}.recommend-right .right-item .right-item-desc{font-size:12px;color:#999;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}</style><style>@font-face{font-family:"";src:url(data:application/x-font-woff;charset=utf-8;base64,d09GRgABAAAAAAWkAAsAAAAACCwAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABHU1VCAAABCAAAADMAAABCsP6z7U9TLzIAAAE8AAAARAAAAFY82EjxY21hcAAAAYAAAABgAAABnLSTHh5nbHlmAAAB4AAAAbkAAAHsQKqXL2hlYWQAAAOcAAAAMQAAADYUc7PwaGhlYQAAA9AAAAAgAAAAJAmRBTpobXR4AAAD8AAAABAAAAAQEfP/+mxvY2EAAAQAAAAACgAAAAoBVgCcbWF4cAAABAwAAAAeAAAAIAESAEtuYW1lAAAELAAAAUMAAAJtSFAGiHBvc3QAAAVwAAAAMgAAAEMi5DcieJxjYGRgYOBikGPQYWB0cfMJYeBgYGGAAJAMY05meiJQDMoDyrGAaQ4gZoOIAgCKIwNPAHicY2BkqWWcwMDKwMHUyXSGgYGhH0IzvmYwYuRgYGBiYGVmwAoC0lxTGByeJT5rYm7438AQw9zA0AgUZgTJAQAXXw1EeJztkLENgDAMBM9JQBFiFErEPlDRZYcMmzWC7VAwBG+dZb8sFw9MQFQ2JYHcCKZLXXE/srifOHTPWgHa2UqrvX8nl/hF9inYZ5n5tXrf3y1aagPLuJWB51oHxAf43xZyeJwlkT1v00AYx5+/z4mlgqL4JQ4JsbEviTPESqLaxUoBq0gIlZeBhYUBiQXUj2A1bfIZigQDY5WKiQVFlAkEAwysTEzwCVqJBZGcOYfh+f3vdPfo+emO1PxvPlNvsBldpit0jVKibi3aaie1yIUDq9xHzSrzoLfVLlCcdXttrYIBEjPFpl03cXXTtjSUB4gTU4uUR9m9z4sm580FjzgWTR/Yy1a/W79uXwiH5sa55gau9gZPzFHHWApD8v3O4Z/72ae74I3zJs8anDcy3qzOs2xw63XdsMJLynXdsnTxEI+N7shYqQY6I0N58ZJUonzKnkl/RhrVyZP+uq+X/Jpv6hVo/gA9PUXiuwAP4kK1zEiQsq6nGIeCwjFkKjLFK9txQsf5qYxXX6KvLF5+628D230Wr3P53QlbrdAhUvM8n5XeybkX5dQ2DYlKHoI4IQ/yNQhc1WzV6yRBh0kFaeCiXlkv5FaKuVB+iH3x0baxwzZw07bFB7F/JM6mU1TRRXU6FWfPJ3PG5pODggfDFEiHg4IznHoPPJyKXRlil905Pjk5Lmp1pM4nk7m65lt5/X/TUH4r/QPdB3VYAAAAeJxjYGRgYADimA/nS+P5bb4ycLMwgMD1i+a/YPT/3//rWbczNwC5HAxMIFEAiqAOtAAAAHicY2BkYGBu+N/AEMO67f/v//9ZtzMARVAACwC/3QfUBAAAAAQ8//sEAAAABbb//wAAAAAAYACcAPYAAHicY2BkYGBgYbAHYhBgAmIuIGRg+A/mMwAADzkBXgAAeJxlj01OwzAQhZ/7B6QSqqhgh+QFYgEo/RGrblhUavdddJ+mTpsqiSPHrdQDcB6OwAk4AtyAO/CaOptgy+Nvnt+MbQA3+IHAedxynVngktmZG7jAveMm9QfHLfKL4za6eHXcof7m2MMz5o676MOwg2hdMXvCu2OBHj4cN3CNT8dN6l+OW+Rvx23c4ddxBz3RdOxhKfqOu3gUsTc1KrBqLVdHGYc6i3RmvVNQSaIXarNPAlOl1b5Upoh1Jkf+sJLmKlOm6lMcNmNrIxkZncqZc8jc6J0Krb+1Np8MBlWlH+qUz5ry2woBLOMaEiscGWOE0MgQldHSV5FCwqmxIG2wJwfsUD+t50uSQcG+J11iBB/Df645KSud9fcUOPC2MVXLKsll6E9Js1oPibw821EJqfvYllU5Jhhw1u/0y5+mfyR+buAAeJxjYGKAAC4G7ICFkYmRmZGFkZWBNS0xrzKTrTgjvzQrk6OyNDWltDijlIEBAG6nCFsAAA==)format("woff")}</style><meta http-equiv=origin-trial content=AymqwRC7u88Y4JPvfIF2F37QKylC04248hLCdJAsh8xgOfe/dVJPV3XS3wLFca1ZMVOtnBfVjaCMTVudWM//5g4AAAB7eyJvcmlnaW4iOiJodHRwczovL3d3dy5nb29nbGV0YWdtYW5hZ2VyLmNvbTo0NDMiLCJmZWF0dXJlIjoiUHJpdmFjeVNhbmRib3hBZHNBUElzIiwiZXhwaXJ5IjoxNjk1MTY3OTk5LCJpc1RoaXJkUGFydHkiOnRydWV9><meta name=referrer content=no-referrer><link rel="shortcut icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAB7Th7/e04e/3tOHv97Th7/e04e/3tOHv97Th7/e04e/3tOHv97Th7/e04e/3tOHv97Th7/e04e/3tOHv97Th7/e04e/3tOHv97Th7/e04e/3tOHv+celb/xbKd/97Tx//e08f/1si5/62Qcv+DWSz/e04e/3tOHv97Th7/e04e/3tOHv97Th7/e04e/4NZLP/WyLn/////////////////////////////////zr2r/3tOHv97Th7/e04e/3tOHv97Th7/e04e/4NZLP/m3tX/////////////////////////////////9/Tx/4xkOv97Th7/e04e/3tOHv97Th7/e04e/3tOHv/Fsp3//////////////////////////////////////72nj/97Th7/e04e/3tOHv97Th7/e04e/3tOHv+DWSz//////////////////////72nj/+DWSz/e04e/5RvSP97Th7/e04e/3tOHv97Th7/e04e/3tOHv97Th7/rZBy/////////////////869q/97Th7/lG9I/72nj/+1m4D/e04e/3tOHv97Th7/e04e/3tOHv97Th7/e04e/72nj/////////////////+celb/e04e/+/p4////////////7WbgP+Ub0j/nHpW/5x6Vv+celb/e04e/3tOHv+9p4//////////////////pIVk/3tOHv////////////////+9p4//5t7V/////////////////3tOHv97Th7/pIVk/////////////////97Tx/97Th7/vaeP///////v6eP/tZuA/////////////////97Tx/97Th7/e04e/4NZLP/39PH/////////////////1si5/5x6Vv+Ub0j/vaeP//f08f////////////////+1m4D/e04e/3tOHv97Th7/vaeP///////////////////////////////////////////////////////v6eP/g1ks/3tOHv97Th7/e04e/3tOHv/Ovav////////////////////////////////////////////39PH/lG9I/3tOHv97Th7/e04e/3tOHv97Th7/e04e/72nj//39PH////////////////////////////e08f/jGQ6/3tOHv97Th7/e04e/3tOHv97Th7/e04e/3tOHv97Th7/g1ks/6SFZP+9p4//vaeP/7WbgP+Ub0j/e04e/3tOHv97Th7/e04e/3tOHv97Th7/e04e/3tOHv97Th7/e04e/3tOHv97Th7/e04e/3tOHv97Th7/e04e/3tOHv97Th7/e04e/3tOHv97Th7/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==" type=image/x-icon><style>.sf-hidden{display:none!important}</style><link rel=canonical href=https://www.iteye.com/blog/chnic-2203008><meta http-equiv=content-security-policy content="default-src 'none'; font-src 'self' data:; img-src 'self' data:; style-src 'unsafe-inline'; media-src 'self' data:; script-src 'unsafe-inline' data:; object-src 'self' data:; frame-src 'self' data:;"><style>img[src="data:,"],source[src="data:,"]{display:none!important}</style><body><svg aria-hidden=true style=position:absolute;width:0px;height:0px;overflow:hidden><symbol id=fanyi viewBox="0 0 1084 1024"><path d="M602.416429 647.439059v75.390494h120.470588v-120.470588h-75.029082l195.493647-193.939577V481.882353h180.597459c33.322165 0 60.289506 26.967341 60.289506 60.235294 0 0.722824-0.012047 1.439624-0.036141 2.1504v236.640377c0.024094 0.710776 0.036141 1.427576 0.036141 2.1504 0 33.261929-26.967341 60.235294-60.235294 60.235294H843.357606v120.470588c0 33.261929-26.967341 60.229271-60.235294 60.22927s-60.235294-26.967341-60.235295-60.235294v-120.470588H542.090782c-33.267953 0-60.235294-26.967341-60.235294-60.235294l0.006024-16.022588 120.554917-119.597177z m240.935153-45.080094v120.470588h120.380235v-120.470588h-120.380235z m-403.534306-46.585977l-27.732329-67.861082H186.479676l-70.716235 167.936c-12.9024 30.659765-48.224376 45.056-78.884141 32.141553-30.659765-12.908424-45.049976-48.2304-32.141553-78.890165l240.941176-572.223247A60.253365 60.253365 0 0 1 301.782076 0.006024a60.253365 60.253365 0 0 1 56.380236 37.466352l174.242635 426.429742 352.798117-350.033318c23.612235-23.431529 61.7472-23.280941 85.17873 0.331294 23.431529 23.612235 23.280941 61.753224-0.331294 85.184753L200.394029 963.029835c-23.612235 23.431529-61.753224 23.280941-85.184753-0.331294-23.431529-23.612235-23.280941-61.753224 0.337318-85.184753l324.270682-321.7408z m-138.842353-339.787294L237.209841 367.441318H362.860664L300.974923 215.979671z"></path></symbol><symbol id=shouji viewBox="0 0 1024 1024"><path d="M768 670.72V102.4H256v568.32h512z m0 51.2H256v199.68h512v-199.68z m102.4-619.52v819.2c0 56.55552-45.84448 102.4-102.4 102.4H256c-56.55552 0-102.4-45.84448-102.4-102.4V102.4C153.6 45.84448 199.44448 0 256 0h512c56.55552 0 102.4 45.84448 102.4 102.4zM512 870.4c-28.27776 0-51.2-22.92224-51.2-51.2s22.92224-51.2 51.2-51.2 51.2 22.92224 51.2 51.2-22.92224 51.2-51.2 51.2z"></path></symbol><symbol id=yuedushu viewBox="0 0 1462 1024"><path d="M731.428571 1024c-259.320686 0-495.879314-146.753829-709.668571-440.246857-29.015771-39.840914-29.015771-103.665371 0-143.506286C235.556571 146.761143 472.107886 0 731.428571 0c259.320686 0 495.879314 146.753829 709.668572 440.246857 29.015771 39.840914 29.015771 103.665371 0 143.506286C1227.300571 877.238857 990.749257 1024 731.428571 1024z m0-841.142857c-195.2256 0-375.632457 107.132343-545.865142 329.142857 170.232686 222.010514 350.639543 329.142857 545.865142 329.142857 195.2256 0 375.632457-107.132343 545.865143-329.142857C1107.053714 289.989486 926.646857 182.857143 731.428571 182.857143z m0 621.714286c-161.579886 0-292.571429-130.991543-292.571428-292.571429s130.991543-292.571429 292.571428-292.571429 292.571429 130.991543 292.571429 292.571429-130.991543 292.571429-292.571429 292.571429z m0-182.857143c60.591543 0 109.714286-49.122743 109.714286-109.714286 0-60.591543-49.122743-109.714286-109.714286-109.714286-60.591543 0-109.714286 49.122743-109.714285 109.714286 0 60.591543 49.122743 109.714286 109.714285 109.714286z"></path></symbol></svg>
+ 
+ <div id=header>
+ <div id=blog_site_nav>
+ <a href=https://www.iteye.com/ class=homepage>首页</a>
+ <a href=https://www.iteye.com/news>资讯</a>
+ <a href=https://www.iteye.com/magazines>精华</a>
+ <a href=https://www.iteye.com/forums>论坛</a>
+ <a href=https://www.iteye.com/ask>问答</a>
+ <a href=https://www.iteye.com/blogs>博客</a>
+ <a href=https://www.iteye.com/blogs/subjects>专栏</a>
+ <a href=https://www.iteye.com/groups>群组</a>
+ <a href=https://www.iteye.com/resources>下载</a>
+ <a href=https://www.iteye.com/codesources>资源</a>
+</div>
+ <div id=user_nav>
+ <li style=width:300px;height:30px;float:left>
+ 
+ <div class=toolbar-search-container>
+ <input id=csdn_so_search_text autocomplete=off type=text value placeholder=java>
+ <button>
+ <i></i><span>搜索</span>
+ </button>
+ </div>
+ </li>
+ <a href=https://www.iteye.com/login class=welcome title=登录>您还未登录!</a>
+ <a href=https://www.iteye.com/login>登录</a>
+ </div>
+<style class=sf-hidden>.toolbar-search-container{width:100%;height:21px;-webkit-box-sizing:border-box;box-sizing:border-box;font-size:0;margin-top:-18px;margin-left:-10px}.toolbar-search-container input{font-size:12px;display:inline-block;width:calc(100% - 68px);height:100%;line-height:inherit;outline:0;background:#f5f6f7;color:#222226;vertical-align:top;text-indent:16px;border:1px solid #e8e8ed;border-right:none;-webkit-box-sizing:border-box;box-sizing:border-box;border-radius:16px 0 0 16px}.toolbar-search-container input:focus{border:1px solid #fc5531;border-right:none}.toolbar-search-container button{display:inline-block;width:68px;height:100%;outline:0;border:0 none;border-radius:0 16px 16px 0;font-size:12px;line-height:32px;cursor:pointer;-webkit-transition:all .2s ease-in;transition:all .2s ease-in;background-color:#81d3f8;text-align:left}.toolbar-search-container button:hover{background-color:#3671a5}.toolbar-search-container button i{display:inline-block;width:24px;height:24px;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAABZVBMVEUAAAD///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8N/mJiAAAAdnRSTlMAAQIDBAUGBwgJCgsODxAREhQXGBkaGxwdHyAhIiMkJSYnKisuMTIzNDY8PT5ERUxNUFVXWVpbXV5kZmdpa21yc3d9f4SFiIyNkJKUlpmam6OlrbGzt7m7vL2+wcTFz9XY2+Dh4+fo6ezt7vLz9PX3+fr7/P3+3UM2zAAAAgRJREFUGBntwfs7U3EcB/D3nDNbhrkMk0rkGrJQS3OJdWHMLZcQZbJCNm32/vv7fHn2PGvOeZ7vMf12Xi+4XC7Xf+WpaWx/2t5Y40El/KOrad5Ir476cUe+2VOWOp314S7GUiyXGoNjxgKtLBhwpnaL164O5iL9D/sjcwdXvLZVCyeMHSqXi80oCi1eUtkx4ECCyn4HSj3ap5KAviiVFS/+5V2hEoWuwAnFMm5bpjgJQNM8xZ6J28w9innoCZ6TzLTASkuG5HkQWt5QvIe1DxRRaNkgma2DtbosyQ3oMC9IbsLOJskLExqaKSZhZ5KiGRo6KQZhZ5CiExr6KNpgp42iDxqGKKphp5piCBoGKJpgp4liABq6KHphp5eiCxpaKcZhZ5yiFRr8OZJrsLNGMueHjl2SZ15Y856R3IWWGYopWJuimIGWcJ5kOgArgTTJfBh6khRJWElSJKEplKGYxm3TFJkQdMUpcjGUi+Uo4tBmbFNZ8qGUb4nKtgF99d+ppKJVKKqKpqgc1cOJJ0e8dpwYCRkwQiOJY95IPYYjDV9YlP+VZ4mf/XDE/HjJcnkqv1/AmY71AksV1jtieYo/r+BQd/yQRYfxbgAvsxSFd3CsoWc4MhEZ7mnAjednVD55UKlnP6iseVCp8Dcq46hY8CvFa1TuwWdy18Q9qJp464PL5XLds78+Oee5Ep6TbwAAAABJRU5ErkJggg==)no-repeat center center;background-size:100%;margin-top:-2px}.toolbar-search-container button span{display:inline-block;vertical-align:top;color:#fff;margin:-28px 0 0 25px}</style>
+ </div>
+ <div id=page>
+ 
+ 
+ 
+ 
+ 
+ 
+ `
+ <div id=content class=clearfix>
+ <div id=local>
+ <div class=local_top></div>
+ <div id=blog_owner>
+ <div id=blog_owner_logo><a href=https://www.iteye.com/blog/user/chnic><img alt=chnic的博客 class=logo src="data:image/png;base64,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" title="chnic的博客: 少壮不努力 老大留内地" width></a></div>
+ <div id=blog_owner_name>chnic</div>
+</div>
+ <div id=blog_actions>
+ <ul>
+ <li>浏览:
+ 225085 次</li>
+ 
+ <li>性别:
+ <img alt=Icon_minigender_1 src="data:image/gif;base64,R0lGODlhCwALALMAADFjdCt4kTKOrjikyGWarFexz2vQ8YGXnoKcpZKxu7S5u4m0wqC9xp/O3sDAwAAAACH5BAEAAA4ALAAAAAALAAsAAAQ80EnZamWTml1WdgyzCcTnNItAno1RLcQSEFVRbGUiIE0BEIOBIGMIKE6FAHHg6SknjMGNADh8FsKANRMBADs=" title=男>
+ </li>
+ 
+ 
+ <li>来自:
+ 北京
+ </li>
+ 
+ <li>
+ <img src="data:image/gif;base64,R0lGODlhWQAaAMQAAGZmZu/v76WlpZmZmcXFxXx8fP///7W1td3d3ff394yMjK2trb29vczMzIWFhZmZmeXl5dbW1v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEHABIALAAAAABZABoAAAX/oCSOZGmeaKqubOu+cCzPdG3fIyIMRID/wFFjNygeIAFdcclsOp/QqFQqaKgEhQLzEOgmENOweEzOLkwIhQJhaAd4iIa8MRAk2vi8fs/v+/9+DWo+Iw52eWACB4sLAg4DAYCSk5SUbwpCDnsBRAI7DoZ3laOkowkOCCILA3wEq00NfgAGs7N8ALi4e7Z/vHq8tXoNDiJFfAkMDAQEDAcMu7ltttPRwNK52NXZ2XjWtHnDIp57CXQCyTsCPbfSu93fvu19wcHv09d44RKeCf39EAc8EQFVZwEEf9uy9QOAMAFDhv4cLozYUKJFiw9zUdTHzx+EZgtCehqgRkDIgxEh/0JEqPHhxYsrU0p0uRBXRZv9ONrxR+BAyJ+eFDhQ4PMAxYwTk858uTImS4U3sW0ktm9nuSILfAoUINTQDgJPl1Zc2jSjVIovJ+JUGVGnP5IDgI7sWkeNQ5ppY+LdizbhWr1p3faD+xMoyQIKFtiNmlQj2bFOMapN2VSp4KtbCx8ewEBABMpskTaGObahQpVlxZaj6qlLlwhbnS0LaPIAAte5XHfBpZv3bt8B/ALYrft3ceDBh3fRt6o4AgZZCURAEIGZstvFs2vfzr279+36hmlH4ErggQZIvqtfz947A1QjFHhGQL++/fv48+vfz7+//+dFkBCAGgskY+CBCCao4CeCDDbo4IOKKUAICQdkoQAZGGao4RMKZHGACgg0suGIJIaxQColhAAAOw==">
+ </li>
+ 
+ </ul>
+ </div>
+ <div id=user_visits class=clearfix>
+ <h5>最近访客 <span style=font-weight:normal;font-size:12px;padding-left:30px>
+ <a href=https://www.iteye.com/blog/user_visits>更多访客&gt;&gt;</a></span></h5>
+ 
+ <div class=user_visit>
+ <div class=logo><a href=https://www.iteye.com/blog/user/rangernian target=_blank><img alt=Rangernian的博客 class=logo src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"><rect fill-opacity="0"/></svg>' title="Rangernian的博客: " width=48px style="background-blend-mode:normal!important;background-clip:content-box!important;background-position:50% 50%!important;background-color:rgba(0,0,0,0)!important;background-image:var(--sf-img-14)!important;background-size:100% 100%!important;background-origin:content-box!important;background-repeat:no-repeat!important"></a></div>
+ <div class=left>
+ <a href=https://www.iteye.com/blog/user/rangernian target=_blank title=Rangernian>Rangernian</a>
+ </div>
+ </div>
+ 
+ <div class=user_visit>
+ <div class=logo><a href=https://www.iteye.com/blog/user/w497586139 target=_blank><img alt=w497586139的博客 class=logo src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"><rect fill-opacity="0"/></svg>' title="w497586139的博客: " width=48px style="background-blend-mode:normal!important;background-clip:content-box!important;background-position:50% 50%!important;background-color:rgba(0,0,0,0)!important;background-image:var(--sf-img-14)!important;background-size:100% 100%!important;background-origin:content-box!important;background-repeat:no-repeat!important"></a></div>
+ <div class=left>
+ <a href=https://www.iteye.com/blog/user/w497586139 target=_blank title=w497586139>w497586139</a>
+ </div>
+ </div>
+ 
+ <div class=user_visit>
+ <div class=logo><a href=https://www.iteye.com/blog/user/teaklee target=_blank><img alt=teaklee的博客 class=logo src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"><rect fill-opacity="0"/></svg>' title="teaklee的博客: " width=48px style="background-blend-mode:normal!important;background-clip:content-box!important;background-position:50% 50%!important;background-color:rgba(0,0,0,0)!important;background-image:var(--sf-img-14)!important;background-size:100% 100%!important;background-origin:content-box!important;background-repeat:no-repeat!important"></a></div>
+ <div class=left>
+ <a href=https://www.iteye.com/blog/user/teaklee target=_blank title=teaklee>teaklee</a>
+ </div>
+ </div>
+ 
+ <div class=user_visit>
+ <div class=logo><a href=https://www.iteye.com/blog/user/rogma target=_blank><img alt=rogma的博客 class=logo src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"><rect fill-opacity="0"/></svg>' title="rogma的博客: " width=48px style="background-blend-mode:normal!important;background-clip:content-box!important;background-position:50% 50%!important;background-color:rgba(0,0,0,0)!important;background-image:var(--sf-img-14)!important;background-size:100% 100%!important;background-origin:content-box!important;background-repeat:no-repeat!important"></a></div>
+ <div class=left>
+ <a href=https://www.iteye.com/blog/user/rogma target=_blank title=rogma>rogma</a>
+ </div>
+ </div>
+ 
+ </div>
+ <div id=user_title_list class=clearfix>
+ <h5>博主相关</h5>
+ <li>
+ <a href=https://www.iteye.com/blog/user/chnic>博客</a>
+ </li>
+ <li>
+ <a href=https://www.iteye.com/weibo>微博</a>
+ </li>
+ <li>
+ <a href=https://www.iteye.com/album>相册</a>
+ </li>
+ <li>
+ <a href=https://www.iteye.com/link>收藏</a>
+ </li>
+ <li>
+ <a href=https://www.iteye.com/blog/guest_book>留言</a>
+ </li>
+ <li>
+ <a href=https://www.iteye.com/blog/profile>关于我</a>
+ </li>
+ </div>
+ 
+ <div id=blog_menu>
+ <h5>文章分类</h5>
+ <ul>
+ <li>
+ <a href=https://www.iteye.com/blog/user/chnic>全部博客 (24)</a>
+ </li>
+ 
+ <li>
+ <a href=https://www.iteye.com/category/20179>Java (6)</a>
+ </li>
+ 
+ <li>
+ <a href=https://www.iteye.com/category/20552>Webservice (5)</a>
+ </li>
+ 
+ <li>
+ <a href=https://www.iteye.com/category/22079>SQL (0)</a>
+ </li>
+ 
+ <li>
+ <a href=https://www.iteye.com/category/23651>AJAX &amp; JAVASCRIPT (1)</a>
+ </li>
+ 
+ <li>
+ <a href=https://www.iteye.com/category/24009>Application Server (1)</a>
+ </li>
+ 
+ <li>
+ <a href=https://www.iteye.com/category/29673>UNIX &amp; Linux (2)</a>
+ </li>
+ 
+ <li>
+ <a href=https://www.iteye.com/category/337072>RCP (6)</a>
+ </li>
+ 
+ <li>
+ <a href=https://www.iteye.com/category/353750>CI (1)</a>
+ </li>
+ 
+ <li>
+ <a href=https://www.iteye.com/category/355362>WildFly (1)</a>
+ </li>
+ 
+ <li>
+ <a href=https://www.iteye.com/category/353872>NoSQL (0)</a>
+ </li>
+ 
+ </ul>
+ </div>
+ <div id=month_blogs>
+ <h5>社区版块</h5>
+ <ul>
+ <li>
+ <a href=https://www.iteye.com/blog/news>我的资讯</a> (
+ 0)</li>
+ <li>
+ <a href=https://www.iteye.com/blog/post>我的论坛</a> (
+ 1)
+ </li>
+ <li>
+ <a href=https://www.iteye.com/blog/answered_problems>我的问答</a> (
+ 0)</li>
+ </ul>
+ </div>
+ <div id=month_blogs>
+ <h5>存档分类</h5>
+ <ul>
+ 
+ <li>
+ <a href=https://www.iteye.com/blog/monthblog/2016-04>2016-04</a>
+ (
+ 1)</li>
+ 
+ <li>
+ <a href=https://www.iteye.com/blog/monthblog/2016-03>2016-03</a>
+ (
+ 1)</li>
+ 
+ <li>
+ <a href=https://www.iteye.com/blog/monthblog/2016-02>2016-02</a>
+ (
+ 1)</li>
+ 
+ <li>
+ <a href=https://www.iteye.com/blog/monthblog_more>更多存档...</a>
+ </li>
+ </ul>
+ </div>
+ 
+ 
+ <div id=guest_books>
+ <h5>最新评论</h5>
+ <ul>
+ 
+ <li>
+ <a href=https://www.iteye.com/blog/user/genius target=_blank title=genius>genius</a>：
+ 您好，我打包feature的时候，找不到org.eclipse ...<br>
+ <a href=https://www.iteye.com/blog/2201998#bc2404216>使用Tycho来构建你的RCP程序(二) —— Feature </a>
+ </li>
+ 
+ <li>
+ <a href=https://www.iteye.com/blog/user/genius target=_blank title=genius>genius</a>：
+ tycho 里面编译grovvy怎么配置研究过吗？<br>
+ <a href=https://www.iteye.com/blog/2201139#bc2404147>使用Tycho来构建你的RCP程序(一) —— Plugin</a>
+ </li>
+ 
+ <li>
+ <a href=https://www.iteye.com/blog/user/jrd7777 target=_blank title=jrd7777>jrd7777</a>：
+ 将近十年了还是一篇好文,不过现在有JSON应该不用传递对象了<br>
+ <a href=https://www.iteye.com/blog/170552#bc2402470>利用AXIS开发Webservice(三) —— 如何传递JavaBean和你的对象</a>
+ </li>
+ 
+ <li>
+ <a href=https://www.iteye.com/blog/user/edhn target=_blank title=edhn>edhn</a>：
+ 找半天资料发现只有此贴提到安装m2e connectors选择 ...<br>
+ <a href=https://www.iteye.com/blog/2201139#bc2401473>使用Tycho来构建你的RCP程序(一) —— Plugin</a>
+ </li>
+ 
+ <li>
+ <a href=https://www.iteye.com/blog/user/love5811 target=_blank title=liangxianfu5811>liangxianfu5811</a>：
+ 按照文章配置，最后报错，错误如下：Caused by: org ...<br>
+ <a href=https://www.iteye.com/blog/2201139#bc2392903>使用Tycho来构建你的RCP程序(一) —— Plugin</a>
+ </li>
+ 
+ </ul>
+ </div>
+ <div class=local_bottom></div>
+ 
+ <div id=nav_show_top_stop style=position:fixed;top:1529.7px>
+ <div>
+ 
+ 
+ 
+ 
+ </div>
+ <div>
+ 
+ 
+ 
+ 
+ </div>
+ </div>
+ </div>
+ 
+ <div id=main>
+ 
+ 
+<div class=h-entry style=display:none>
+ 
+</div>
+<div class=blog_main>
+ <script type=application/ld+json>{"@context":"https://zhanzhang.baidu.com/contexts/cambrian.jsonld","@id":"https://www.iteye.com/blog/chnic-2203008","title":"使用Tycho来构建你的RCP程序(六) —— Configuration ","images":[],"description":"","pubDate":"2015-04-16T16:02:55"}</script>
+ <div class=blog_title>
+ <h3>
+ 使用Tycho来构建你的RCP程序(六) —— Configuration 
+ <em class=actions> </em>
+ </h3>
+ <ul class=blog_categories><strong>博客分类：</strong> <li><a href=https://www.iteye.com/category/337072>RCP</a></li> </ul>
+ <div class=news_tag><a href=https://www.iteye.com/blogs/tag/RCP>RCP</a><a href=https://www.iteye.com/blogs/tag/Build>Build</a><a href=https://www.iteye.com/blogs/tag/Maven>Maven</a><a href=https://www.iteye.com/blogs/tag/Tycho>Tycho</a><a href=https://www.iteye.com/blogs/tag/Configuration>Configuration</a>&nbsp;</div>
+ </div>
+ <div id=blog_content class=hide-main-content>
+ <div class="hide-article-box text-center" style=display:none>
+ 
+ </div>
+ <div class=iteye-blog-content-contain>
+<p style=font-size:14px>经过前面的五篇之后，我相信你已经可以熟练的操作使用Tycho来构建你的RCP程序了。RCP开发其实在Java开发当中是非常非常小众的东西。小众的东西注定了资料少而且即便有也是英文的，这一篇会介绍Tycho的一些general configuration，希望能帮到有需要的朋友。</p>
+<p style=font-size:14px>&nbsp;</p>
+<p style=font-size:14px>1.在Tycho build当中我们在控制台上发现很多的关于enconding的warning</p>
+<div style=font-size:14px class=quote_title>写道</div>
+<div style=font-size:14px class=quote_div>[WARNING] Using platform encoding (GBK actually) to copy filtered resources, i.e. build is platform dependent!</div>
+<p style=font-size:14px>&nbsp;</p>
+<p style=font-size:14px>乱码问题想必大家都遇见过，如果在Tycho里使用UTF-8编码而不是现在的GBK呢？很简单只需要在你的parent pom的properties节点下添加如下配置文件</p>
+<div class=dp-highlighter><div class=bar><div class=tools>Xml代码 &nbsp;<a href=javascript:void(0) title=收藏这段代码><img class=star src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="15" height="14"><rect fill-opacity="0"/></svg>' alt=收藏代码 style="background-blend-mode:normal!important;background-clip:content-box!important;background-position:50% 50%!important;background-color:rgba(0,0,0,0)!important;background-image:var(--sf-img-15)!important;background-size:100% 100%!important;background-origin:content-box!important;background-repeat:no-repeat!important"><img class=spinner src=data:, style=display:none></a></div></div><ol start=1 class=dp-xml><li><span><span class=tag>&lt;</span><span class=tag-name>project.build.sourceEncoding</span><span class=tag>&gt;</span><span>UTF-8</span><span class=tag>&lt;/</span><span class=tag-name>project.build.sourceEncoding</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></span></ol></div><pre name=code class=xml style=display:none>&lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;  </pre>
+<p style=font-size:14px>&nbsp;</p>
+<p style=font-size:14px>再次build，所有的enconding的warning都已经消失不见了。</p>
+<p style=font-size:14px>&nbsp;</p>
+<p style=font-size:14px>&nbsp;</p>
+<p style=font-size:14px>2.对于plugin项目来说，Tycho会把他build成为一个jar文件；但是如何build成一个native plugin，也就是文件夹的形式呢？</p>
+<p style=font-size:14px>&nbsp;</p>
+<p style=font-size:14px>方法同样很简单，我们需要更改一下MANIFEST.MF文件，在其中添加一句配置。</p>
+<div class=dp-highlighter><div class=bar><div class=tools>Xml代码 &nbsp;<a href=javascript:void(0) title=收藏这段代码><img class=star src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="15" height="14"><rect fill-opacity="0"/></svg>' alt=收藏代码 style="background-blend-mode:normal!important;background-clip:content-box!important;background-position:50% 50%!important;background-color:rgba(0,0,0,0)!important;background-image:var(--sf-img-15)!important;background-size:100% 100%!important;background-origin:content-box!important;background-repeat:no-repeat!important"><img class=spinner src=data:, style=display:none></a></div></div><ol start=1 class=dp-xml><li><span><span>Eclipse-BundleShape:&nbsp;dir&nbsp;&nbsp;</span></span></ol></div><pre name=code class=xml style=display:none>Eclipse-BundleShape: dir</pre>
+<p style=font-size:14px>&nbsp;</p>
+<p style=font-size:14px>再次build，原来的plugin在product的plugins文件夹内会以一个文件夹而非jar包的形式存在。</p>
+<p style=font-size:14px>&nbsp;</p>
+<p style=font-size:14px>&nbsp;</p>
+<p style=font-size:14px>3. 如何更改product build出的文件名？我希望添加版本号或者时间戳。</p>
+<p style=font-size:14px>&nbsp;</p>
+<p style=font-size:14px>你也许会说用maven-antrun-plugin不就可以做到。没错，ant当然可以做得到，但是其实Tycho也提供了他自己的方法。首先我们需要在parent pom当中定义我们的版本号和timestamp格式。</p>
+<div class=dp-highlighter><div class=bar><div class=tools>Xml代码 &nbsp;<a href=javascript:void(0) title=收藏这段代码><img class=star src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="15" height="14"><rect fill-opacity="0"/></svg>' alt=收藏代码 style="background-blend-mode:normal!important;background-clip:content-box!important;background-position:50% 50%!important;background-color:rgba(0,0,0,0)!important;background-image:var(--sf-img-15)!important;background-size:100% 100%!important;background-origin:content-box!important;background-repeat:no-repeat!important"><img class=spinner src=data:, style=display:none></a></div></div><ol start=1 class=dp-xml><li><span><span class=tag>&lt;</span><span class=tag-name>mail.version</span><span class=tag>&gt;</span><span>1.0.0</span><span class=tag>&lt;/</span><span class=tag-name>mail.version</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span><span class=tag>&lt;</span><span class=tag-name>mail.timestamp</span><span class=tag>&gt;</span><span>${maven.build.timestamp}</span><span class=tag>&lt;/</span><span class=tag-name>mail.timestamp</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span><span class=tag>&lt;</span><span class=tag-name>maven.build.timestamp.format</span><span class=tag>&gt;</span><span>yyyyMMddHHmm</span><span class=tag>&lt;/</span><span class=tag-name>maven.build.timestamp.format</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span></ol></div><pre name=code class=xml style=display:none>		&lt;mail.version&gt;1.0.0&lt;/mail.version&gt;
+		&lt;mail.timestamp&gt;${maven.build.timestamp}&lt;/mail.timestamp&gt;
+		&lt;maven.build.timestamp.format&gt;yyyyMMddHHmm&lt;/maven.build.timestamp.format&gt;</pre>
+<p style=font-size:14px>maven.build.timestamp.format是Maven内置的一个properties，因为Tycho在build中识别不了Maven内置的properties（这是Tycho的一个bug）。因此我们需要再多定义个mail.timestamp来引用他。之后，我们需要更改一下product项目中的pom，添加一段archiveFileName的配置</p>
+<p style=font-size:14px>&nbsp;</p>
+<div class=dp-highlighter><div class=bar><div class=tools>Xml代码 &nbsp;<a href=javascript:void(0) title=收藏这段代码><img class=star src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="15" height="14"><rect fill-opacity="0"/></svg>' alt=收藏代码 style="background-blend-mode:normal!important;background-clip:content-box!important;background-position:50% 50%!important;background-color:rgba(0,0,0,0)!important;background-image:var(--sf-img-15)!important;background-size:100% 100%!important;background-origin:content-box!important;background-repeat:no-repeat!important"><img class=spinner src=data:, style=display:none></a></div></div><ol start=1 class=dp-xml><li><span><span class=tag>&lt;</span><span class=tag-name>project</span><span>&nbsp;</span><span class=attribute>xmlns</span><span>=</span><span class=attribute-value>"http://maven.apache.org/POM/4.0.0"</span><span>&nbsp;</span><span class=attribute>xmlns:xsi</span><span>=</span><span class=attribute-value>"http://www.w3.org/2001/XMLSchema-instance"</span><span>&nbsp;</span><span class=attribute>xsi:schemaLocation</span><span>=</span><span class=attribute-value>"http://maven.apache.org/POM/4.0.0&nbsp;http://maven.apache.org/xsd/maven-4.0.0.xsd"</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>modelVersion</span><span class=tag>&gt;</span><span>4.0.0</span><span class=tag>&lt;/</span><span class=tag-name>modelVersion</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>parent</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>groupId</span><span class=tag>&gt;</span><span>com.chnic.tycho.mail</span><span class=tag>&lt;/</span><span class=tag-name>groupId</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>artifactId</span><span class=tag>&gt;</span><span>com.chnic.tycho.mail.parent</span><span class=tag>&lt;/</span><span class=tag-name>artifactId</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>version</span><span class=tag>&gt;</span><span>1.0.0-SNAPSHOT</span><span class=tag>&lt;/</span><span class=tag-name>version</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>relativePath</span><span class=tag>&gt;</span><span>../com.chnic.tycho.mail.parent/pom.xml</span><span class=tag>&lt;/</span><span class=tag-name>relativePath</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;<span class=tag>&lt;/</span><span class=tag-name>parent</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><li><span>&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>artifactId</span><span class=tag>&gt;</span><span>com.chnic.tycho.mail.product</span><span class=tag>&lt;/</span><span class=tag-name>artifactId</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>packaging</span><span class=tag>&gt;</span><span>eclipse-repository</span><span class=tag>&lt;/</span><span class=tag-name>packaging</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><li><span>&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>build</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>plugins</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>plugin</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>groupId</span><span class=tag>&gt;</span><span>org.eclipse.tycho</span><span class=tag>&lt;/</span><span class=tag-name>groupId</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>artifactId</span><span class=tag>&gt;</span><span>tycho-p2-repository-plugin</span><span class=tag>&lt;/</span><span class=tag-name>artifactId</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>version</span><span class=tag>&gt;</span><span>${tycho.version}</span><span class=tag>&lt;/</span><span class=tag-name>version</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>configuration</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>includeAllDependencies</span><span class=tag>&gt;</span><span>true</span><span class=tag>&lt;/</span><span class=tag-name>includeAllDependencies</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;/</span><span class=tag-name>configuration</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;/</span><span class=tag-name>plugin</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>plugin</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>groupId</span><span class=tag>&gt;</span><span>org.eclipse.tycho</span><span class=tag>&lt;/</span><span class=tag-name>groupId</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>artifactId</span><span class=tag>&gt;</span><span>tycho-p2-director-plugin</span><span class=tag>&lt;/</span><span class=tag-name>artifactId</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>version</span><span class=tag>&gt;</span><span>${tycho.version}</span><span class=tag>&lt;/</span><span class=tag-name>version</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>executions</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>execution</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>id</span><span class=tag>&gt;</span><span>materialize-products</span><span class=tag>&lt;/</span><span class=tag-name>id</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>goals</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>goal</span><span class=tag>&gt;</span><span>materialize-products</span><span class=tag>&lt;/</span><span class=tag-name>goal</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;/</span><span class=tag-name>goals</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;/</span><span class=tag-name>execution</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>execution</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>id</span><span class=tag>&gt;</span><span>archive-products</span><span class=tag>&lt;/</span><span class=tag-name>id</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>goals</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>goal</span><span class=tag>&gt;</span><span>archive-products</span><span class=tag>&lt;/</span><span class=tag-name>goal</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;/</span><span class=tag-name>goals</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;/</span><span class=tag-name>execution</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;/</span><span class=tag-name>executions</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>configuration</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>products</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>product</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>id</span><span class=tag>&gt;</span><span>Mail</span><span class=tag>&lt;/</span><span class=tag-name>id</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>archiveFileName</span><span class=tag>&gt;</span><span>Mail_${mail.version}_${mail.timestamp}-client</span><span class=tag>&lt;/</span><span class=tag-name>archiveFileName</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;/</span><span class=tag-name>product</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;/</span><span class=tag-name>products</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;/</span><span class=tag-name>configuration</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;/</span><span class=tag-name>plugin</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;/</span><span class=tag-name>plugins</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;<span class=tag>&lt;/</span><span class=tag-name>build</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span><span class=tag>&lt;/</span><span class=tag-name>project</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span></ol></div><pre name=code class=xml style=display:none>&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+  &lt;parent&gt;
+    &lt;groupId&gt;com.chnic.tycho.mail&lt;/groupId&gt;
+    &lt;artifactId&gt;com.chnic.tycho.mail.parent&lt;/artifactId&gt;
+    &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;
+    &lt;relativePath&gt;../com.chnic.tycho.mail.parent/pom.xml&lt;/relativePath&gt;
+  &lt;/parent&gt;
+  
+  &lt;artifactId&gt;com.chnic.tycho.mail.product&lt;/artifactId&gt;
+  &lt;packaging&gt;eclipse-repository&lt;/packaging&gt;
+  
+  &lt;build&gt;
+    &lt;plugins&gt;
+      &lt;plugin&gt;
+        &lt;groupId&gt;org.eclipse.tycho&lt;/groupId&gt;
+        &lt;artifactId&gt;tycho-p2-repository-plugin&lt;/artifactId&gt;
+        &lt;version&gt;${tycho.version}&lt;/version&gt;
+        &lt;configuration&gt;
+          &lt;includeAllDependencies&gt;true&lt;/includeAllDependencies&gt;
+        &lt;/configuration&gt;
+      &lt;/plugin&gt;
+      &lt;plugin&gt;
+        &lt;groupId&gt;org.eclipse.tycho&lt;/groupId&gt;
+        &lt;artifactId&gt;tycho-p2-director-plugin&lt;/artifactId&gt;
+        &lt;version&gt;${tycho.version}&lt;/version&gt;
+        &lt;executions&gt;
+          &lt;execution&gt;
+            &lt;id&gt;materialize-products&lt;/id&gt;
+            &lt;goals&gt;
+              &lt;goal&gt;materialize-products&lt;/goal&gt;
+            &lt;/goals&gt;
+          &lt;/execution&gt;
+          &lt;execution&gt;
+            &lt;id&gt;archive-products&lt;/id&gt;
+            &lt;goals&gt;
+              &lt;goal&gt;archive-products&lt;/goal&gt;
+            &lt;/goals&gt;
+          &lt;/execution&gt;
+        &lt;/executions&gt;
+        &lt;configuration&gt;
+	      &lt;products&gt;
+	        &lt;product&gt;
+	          &lt;id&gt;Mail&lt;/id&gt;
+	          &lt;archiveFileName&gt;Mail_${mail.version}_${mail.timestamp}-client&lt;/archiveFileName&gt;
+	        &lt;/product&gt;
+	      &lt;/products&gt;
+	    &lt;/configuration&gt;
+      &lt;/plugin&gt;
+    &lt;/plugins&gt;
+  &lt;/build&gt;
+&lt;/project&gt;</pre>
+&nbsp;&nbsp;
+<p style=font-size:14px>这里我们添加了两个属性：id和archiveFileName。archiveFileName很好理解，就是我们build出的文件名，那么id是什么呢？其实这里的id就是我们在Mail.product文件里定义的id，两者必须一致。配置完成之后再次build，build出的文件名已经改变。</p>
+<p style=font-size:14px>&nbsp;</p>
+<p style=font-size:14px>&nbsp;</p>
+<p style=font-size:14px>4. 如果我的RCP项目有许多开发人员，我能不能在本地做一个eclipse sdk的镜像让大家共享，而不是每次每个人都从网上下载所需要的dependency呢？</p>
+<p style=font-size:14px>&nbsp;</p>
+<p style=font-size:14px>Eclipse和Tycho其实也提供这种机制，以我们使用的eclipse 4.4版本luna为例，首先我们需要在本机创建一个他的p2 repository。确保在你本地有一个eclipse，然后eclipse里包含org.eclipse.equinox.p2.artifact.repository这个bundle。之后，我们CMD打开控制台，一路CD到eclipse的安装根目录。运行如下命令</p>
+<div class=dp-highlighter><div class=bar><div class=tools>Console代码 &nbsp;<a href=javascript:void(0) title=收藏这段代码><img class=star src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="15" height="14"><rect fill-opacity="0"/></svg>' alt=收藏代码 style="background-blend-mode:normal!important;background-clip:content-box!important;background-position:50% 50%!important;background-color:rgba(0,0,0,0)!important;background-image:var(--sf-img-15)!important;background-size:100% 100%!important;background-origin:content-box!important;background-repeat:no-repeat!important"><img class=spinner src=data:, style=display:none></a></div></div><ol start=1 class=dp-default><li><span><span>eclipse.exe&nbsp;-application&nbsp;org.eclipse.equinox.p2.artifact.repository.mirrorApplication&nbsp;-source&nbsp;http://download.eclipse.org/releases/luna&nbsp;-destination&nbsp;file:C:\repository\luna&nbsp;&nbsp;</span></span></ol></div><pre name=code class=Console style=display:none>eclipse.exe -application org.eclipse.equinox.p2.artifact.repository.mirrorApplication -source http://download.eclipse.org/releases/luna -destination file:C:\repository\luna</pre>
+<p style=font-size:14px>&nbsp;</p>
+<p style=font-size:14px>C:\repository\luna这个目录就是我们的p2的repository目录，你会发现这个目录中的文件会逐渐增多。下载完成之后，我们更改Maven的settings.xml，添加如下配置</p>
+<div class=dp-highlighter><div class=bar><div class=tools>Xml代码 &nbsp;<a href=javascript:void(0) title=收藏这段代码><img class=star src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="15" height="14"><rect fill-opacity="0"/></svg>' alt=收藏代码 style="background-blend-mode:normal!important;background-clip:content-box!important;background-position:50% 50%!important;background-color:rgba(0,0,0,0)!important;background-image:var(--sf-img-15)!important;background-size:100% 100%!important;background-origin:content-box!important;background-repeat:no-repeat!important"><img class=spinner src=data:, style=display:none></a></div></div><ol start=1 class=dp-xml><li><span><span class=tag>&lt;</span><span class=tag-name>settings</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;<span class=tag>&lt;</span><span class=tag-name>mirrors</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>mirror</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>id</span><span class=tag>&gt;</span><span>Luna_mirror</span><span class=tag>&lt;/</span><span class=tag-name>id</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>mirrorOf</span><span class=tag>&gt;</span><span>Luna</span><span class=tag>&lt;/</span><span class=tag-name>mirrorOf</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>name</span><span class=tag>&gt;</span><span>Luna&nbsp;Local&nbsp;p2&nbsp;repository</span><span class=tag>&lt;/</span><span class=tag-name>name</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>url</span><span class=tag>&gt;</span><span>file://</span><span class=tag>&lt;</span><span class=tag-name>span</span><span>&nbsp;</span><span class=attribute>style</span><span>=</span><span class=attribute-value>"font-family:&nbsp;Helvetica,&nbsp;Tahoma,&nbsp;Arial,&nbsp;sans-serif;&nbsp;white-space:&nbsp;normal;&nbsp;background-color:&nbsp;#ffffff;"</span><span class=tag>&gt;</span><span>C:/repository/luna/</span><span class=tag>&lt;/</span><span class=tag-name>span</span><span class=tag>&gt;</span><span class=tag>&lt;/</span><span class=tag-name>url</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>layout</span><span class=tag>&gt;</span><span>p2</span><span class=tag>&lt;/</span><span class=tag-name>layout</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>mirrorOfLayouts</span><span class=tag>&gt;</span><span>p2</span><span class=tag>&lt;/</span><span class=tag-name>mirrorOfLayouts</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;<span class=tag>&lt;/</span><span class=tag-name>mirror</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;<span class=tag>&lt;/</span><span class=tag-name>mirrors</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span><span class=tag>&lt;/</span><span class=tag-name>settings</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;&nbsp;</span></span></ol></div><pre name=code class=xml style=display:none>&lt;settings&gt;
+ &lt;mirrors&gt;
+  &lt;mirror&gt;
+   &lt;id&gt;Luna_mirror&lt;/id&gt;
+   &lt;mirrorOf&gt;Luna&lt;/mirrorOf&gt;
+   &lt;name&gt;Luna Local p2 repository&lt;/name&gt;
+   &lt;url&gt;file://&lt;/url&gt;
+   &lt;layout&gt;p2&lt;/layout&gt;
+   &lt;mirrorOfLayouts&gt;p2&lt;/mirrorOfLayouts&gt;
+  &lt;/mirror&gt;
+ &lt;/mirrors&gt;
+&lt;/settings&gt; </pre>
+<p>&nbsp;</p>
+<p style=font-size:14px>这里mirrorOf和我们parent里配置的repository相对应，也就是说在bulid resolving dependencies的时候，如果在settings.xml里能找到对应的mirror的话，所有的dependency便会从本地下载，反之则是继续通过你配置的url来下载。</p>
+<p style=font-size:14px>&nbsp;</p>
+<p style=font-size:14px>&nbsp;</p>
+<p style=font-size:14px>5. 如果更改了一个plugin并在MANIFEST.MF里更新了版本号，我如何能批量的更新POM文件，让之与其对应呢？</p>
+<p style=font-size:14px>&nbsp;</p>
+<p style=font-size:14px>这个时候你就需要tycho-versions-plugin来帮你了。在parent目录中，我们把这个plugin添加进pom中</p>
+<div class=dp-highlighter><div class=bar><div class=tools>Xml代码 &nbsp;<a href=javascript:void(0) title=收藏这段代码><img class=star src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="15" height="14"><rect fill-opacity="0"/></svg>' alt=收藏代码 style="background-blend-mode:normal!important;background-clip:content-box!important;background-position:50% 50%!important;background-color:rgba(0,0,0,0)!important;background-image:var(--sf-img-15)!important;background-size:100% 100%!important;background-origin:content-box!important;background-repeat:no-repeat!important"><img class=spinner src=data:, style=display:none></a></div></div><ol start=1 class=dp-xml><li><span><span class=tag>&lt;</span><span class=tag-name>plugin</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>groupId</span><span class=tag>&gt;</span><span>org.eclipse.tycho</span><span class=tag>&lt;/</span><span class=tag-name>groupId</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>artifactId</span><span class=tag>&gt;</span><span>tycho-versions-plugin</span><span class=tag>&lt;/</span><span class=tag-name>artifactId</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>version</span><span class=tag>&gt;</span><span>${tycho.version}</span><span class=tag>&lt;/</span><span class=tag-name>version</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span><span class=tag>&lt;/</span><span class=tag-name>plugin</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span></ol></div><pre name=code class=xml style=display:none>			&lt;plugin&gt;
+				&lt;groupId&gt;org.eclipse.tycho&lt;/groupId&gt;
+				&lt;artifactId&gt;tycho-versions-plugin&lt;/artifactId&gt;
+				&lt;version&gt;${tycho.version}&lt;/version&gt;
+			&lt;/plugin&gt;</pre>
+<p style=font-size:14px>&nbsp;</p>
+<p style=font-size:14px>添加完成之后，在我们的build项目中执行maven -&gt; build并在goals中加入tycho-versions:update-pom，运行Maven。Maven运行完之后你会发现所有的POM文件都已经根据他的plugin或者feature的版本号进行更新了。</p>
+<p style=font-size:14px>&nbsp;</p>
+<p style=font-size:14px>&nbsp;</p>
+<p style=font-size:14px>6. 如何移除build中的wanring信息呢？</p>
+<p style=font-size:14px>&nbsp;</p>
+<p style=font-size:14px>依然需要显示的配置tycho-compiler-plugin插件，并且提供忽略warning message的配置。在parent pom当中添加如下配置</p>
+<div class=dp-highlighter><div class=bar><div class=tools>Xml代码 &nbsp;<a href=javascript:void(0) title=收藏这段代码><img class=star src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="15" height="14"><rect fill-opacity="0"/></svg>' alt=收藏代码 style="background-blend-mode:normal!important;background-clip:content-box!important;background-position:50% 50%!important;background-color:rgba(0,0,0,0)!important;background-image:var(--sf-img-15)!important;background-size:100% 100%!important;background-origin:content-box!important;background-repeat:no-repeat!important"><img class=spinner src=data:, style=display:none></a></div></div><ol start=1 class=dp-xml><li><span><span class=tag>&lt;</span><span class=tag-name>plugin</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>groupId</span><span class=tag>&gt;</span><span>org.eclipse.tycho</span><span class=tag>&lt;/</span><span class=tag-name>groupId</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>artifactId</span><span class=tag>&gt;</span><span>tycho-compiler-plugin</span><span class=tag>&lt;/</span><span class=tag-name>artifactId</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>version</span><span class=tag>&gt;</span><span>${tycho.version}</span><span class=tag>&lt;/</span><span class=tag-name>version</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>configuration</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>compilerArgs</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;</span><span class=tag-name>arg</span><span class=tag>&gt;</span><span>-warn:-raw,unchecked</span><span class=tag>&lt;/</span><span class=tag-name>arg</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;/</span><span class=tag-name>compilerArgs</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class=tag>&lt;/</span><span class=tag-name>configuration</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span><li><span><span class=tag>&lt;/</span><span class=tag-name>plugin</span><span class=tag>&gt;</span><span>&nbsp;&nbsp;</span></span></ol></div><pre name=code class=xml style=display:none>&lt;plugin&gt;
+	&lt;groupId&gt;org.eclipse.tycho&lt;/groupId&gt;
+	&lt;artifactId&gt;tycho-compiler-plugin&lt;/artifactId&gt;
+    &lt;version&gt;${tycho.version}&lt;/version&gt;
+    &lt;configuration&gt;
+		&lt;compilerArgs&gt;
+			&lt;arg&gt;-warn:-raw,unchecked&lt;/arg&gt;
+		&lt;/compilerArgs&gt;
+	&lt;/configuration&gt;
+&lt;/plugin&gt;</pre>
+<p style=font-size:14px>&nbsp;</p>
+<p style=font-size:14px>再次build，所有的warning信息都已经被忽略。</p>
+</div>
+ 
+ <div id=bottoms class=clearfix>
+ 
+ <div id=share_weibo>分享到：
+ <a data-type=sina href=javascript:void(0) title=分享到新浪微博><img src=data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAZABkAAD/7AARRHVja3kAAQAEAAAAZAAA/+4ADkFkb2JlAGTAAAAAAf/bAIQAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQICAgICAgICAgICAwMDAwMDAwMDAwEBAQEBAQECAQECAgIBAgIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMD/8AAEQgAEAAQAwERAAIRAQMRAf/EAGsAAAMBAAAAAAAAAAAAAAAAAAMHCAkBAAIDAQAAAAAAAAAAAAAAAAUHAgMICRAAAQUBAQADAQAAAAAAAAAABQIDBAYHAQgAERITEQACAgICAgMBAQAAAAAAAAACAwEEEQUSBhMHACEiIxT/2gAMAwEAAhEDEQA/ANifKXk096OzU3v2v28NSaVOjE265ZbIMqDxzQbSw1KjSCs2w2xpLDAhk8x1l6VJW49NebeQnrf4698zz17rNzfVG7raWIRRmSgCLhyYcZjMkf1AwUYmZzJTExGMZ+de/b3uzrnqvf0PWvR9SW07OIIKylM2PFTQUAXAU18kTiUXMVhAioSApg+Xj+Gv1Kr/AJewxUbZ6/UxeiWYbZrfkmu5HX2is8FZooV+TUoPdJrsYcEZjLPAuj5cLqH3GuFGp0OT9MSOJlYqx13VCvcwEXm8jS9McpEoj8R5RwOOQ8SGYnHODAvyXyjU7xnuDvjbnrhlg+sUfFW2Ws2TIULUSzFlkUXSbucKdD1OggEprHWsJ/qqZlfHfb2TgCOM91o6Hpdq88ZI1hRfEt0p2gP00TaaxcWpxLRKYQpON7vyHYbmDidGH4xCuCy7KuuoilWkdbdbD67tOvU+sWyIVPpVv88osLZK4MWZlq5WixgmDHBkEoDj7gWRGJhh9v8AR/a72s3aenKbd1XZtxG2Daam3SG2xDqnjCjaC1tNRJJquLz0zTdsViiAJ1M5ggJA6F7JrDOBWzx7gC7BrBTfNlj3+5HR9OKVWjAp0g2Lngc0wShElyraqA6XHRf6EZ7I2S820mOiDzi+rSEs9jSGnPq+mhlg7lyGsKFkCxnkMiquucnjMRkigZmI4wH3n4ydH6d2Fn2FV93exyqahHXevHRqJK2qzccPhYtt7b3F8a/OFsZxQkngJFLSsZHjP//Z></a>
+ <a data-type=qq href=javascript:void(0) title=分享到腾讯微博><img src=data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAZABkAAD/7AARRHVja3kAAQAEAAAAZAAA/+4ADkFkb2JlAGTAAAAAAf/bAIQAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQICAgICAgICAgICAwMDAwMDAwMDAwEBAQEBAQECAQECAgIBAgIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMD/8AAEQgAEAAQAwERAAIRAQMRAf/EAG0AAAMBAAAAAAAAAAAAAAAAAAUHCAkBAAIDAQAAAAAAAAAAAAAAAAQHBQYICRAAAQUBAAIBBQAAAAAAAAAABQIDBAYHAQARCCESIhMVEQACAwACAgMBAQAAAAAAAAACAwEEBREGABIhEwcUIv/aAAwDAQACEQMRAD8A32zNAErT6HdrhU06retjs8+rZ1T1rGDlWEiESLZslkt9pkQ1k1p4TMMtNI5IYUtXHHHXkoT9NXaapXZfnUWBRzc+qDbL5GTkIZBStal8+vMiElMyJcfAiMzPnMzrrxfn097ZQ7Z3t3SdVz6cMFUNJJALn2bHHvxBtABGDCZmDM2QMeH9GFCRQ/U2hGfsYpsuJAoVxNVwXOHmxk6rzJA2Kix1ewoakFhJcRIPwXvXJz7bkdf4qS6lSPA86RYNRjXjpde0iNS2kuVmDhEy+tgfAkJQs459BmCj5iRmJ8k95RIZporUWdf7z18E2X1gdD0tqmxQS5Dp9mLYuXqLj7jEll/mRYMj5BuP/IMnk2HHJWnf3ID9E1IhnGbR4AQZy/5nZLgHjydYsoNZnsGTCPC6/X2Iw5LjzbUElOXK6lT7TH2Hdqv0tr9eqfm/U/5m7drrE7Fz7WmNZ1VFmKtFTZWJ8g2yxks4AiNKfSOBI5lKdL7jpdP/ADW7udwG4tOf2JmdnwpATdo2Lavt0rCZb6SLl10gCOTEUvcTpiWAv1X9t+WQU4CtWd40O1i63jbZgUNfdP1YhHO6VbB8QhDeEUmthgjxRAuCRKQ4q5K1Tp0uX+ltj2lpPE+MHF6VurYvX7uzGp5+cthVqef7/wAyiICg3tc4EyZCJFADCVgHMn8lPlO1v1qhar2et9Ar79/e33oXd0dMoZesLBgEuqhSpbCgNgLlky5zG+gr5gIiPP/Z></a>
+ </div>
+ </div>
+ <div class=blog_nav>
+ <div class=pre_next>
+ <a href=https://www.iteye.com/blog/2278563 class=next title=基于Windows的Jenkins+Git集成>基于Windows的Jenkins+Git集成</a>
+ |
+ <a href=https://www.iteye.com/blog/2202368 class=pre title="使用Tycho来构建你的RCP程序(五) —— Plugin Unit Test">使用Tycho来构建你的RCP程序(五) —— P ...</a>
+ </div>
+ </div>
+ <div class=blog_bottom>
+ <ul>
+ <li>2015-04-16 16:02</li>
+ <li>浏览 3211</li>
+ <li><a href=#comments>评论(2)</a></li>
+ 
+ 
+ <li>分类:<a href=https://www.iteye.com/blogs/category/language>编程语言</a></li> 
+ <li class=last><a href=https://www.iteye.com/wiki/blog/2203008 target=_blank class=more>查看更多</a></li>
+ </ul> 
+ </div>
+ 
+ <div class=blog_comment>
+ <h5>评论</h5>
+ <a id=comments name=comments></a>
+ <div id=bc2387343>
+ <div class=comment_title>
+ 2 楼
+ <a href=https://www.iteye.com/blog/user/heriane target=_blank title=heriane>heriane</a>
+ 2016-03-31&nbsp;&nbsp;
+ 
+ 
+ </div>
+ <div class=comment_content>eclipse.exe -application org.eclipse.equinox.p2.artifact.repository.mirrorApplication -source http://download.eclipse.org/releases/luna -destination file:C:\repository\luna&nbsp; <br><br><br>如果改成HTTP的话是不是改成<br>eclipse.exe -application org.eclipse.equinox.p2.artifact.repository.mirrorApplication -source http://download.eclipse.org/releases/luna -destination http:www.repository.com\luna ? <br></div>
+</div>
+<div id=bc2387341>
+ <div class=comment_title>
+ 1 楼
+ <a href=https://www.iteye.com/blog/user/heriane target=_blank title=heriane>heriane</a>
+ 2016-03-31&nbsp;&nbsp;
+ 
+ 
+ </div>
+ <div class=comment_content>能把这块的完整代码上传吗？特别是p2 repository这块。</div>
+</div>
+ 
+ 
+ </div>
+ <div class=blog_comment>
+ <h5>发表评论</h5>
+ <p style=text-align:center;margin-top:30px;margin-bottom:0px><a href=https://www.iteye.com/login style=background-color:white> <img src="data:image/png;base64,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" style=vertical-align:middle;margin-right:10px></a><a href=https://www.iteye.com/login> 您还没有登录,请您登录后再发表评论 </a></p>
+ </div>
+ </div>
+ 
+</div>
+<div class=comments>
+ <div class="boutique-curr clearfix" id=album_detail_wrap>
+ <h3>相关推荐</h3>
+ 
+ <ul style=margin-top:8px class=clearfix>
+ 
+ <div class=mod_topic_wrap style=float:left>
+ <div class=post_feed_box style=width:100%>
+ 
+ <div id=post_feed_wrap class="post_feed_wrap post_feed_style1">
+ 
+ 
+ 
+ <dl class=iteye_feed>
+ <dt>
+ <a href=https://download.csdn.net/download/weixin_42168745/15026626 target=_blank title="Maven-Tycho-Demo：一个示例项目，解释用于Eclipse RCP应用程序的Maven Tycho" data-report-query="utm_medium=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Paid-1-15026626-iteye_blog-2203008.nonecase&amp;depth_1-utm_source=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Paid-1-15026626-iteye_blog-2203008.nonecase" data-report-click='{"mod":"popu_708","dest":"https://download.csdn.net/download/weixin_42168745/15026626","strategy":"2~default~OPENSEARCH~Paid","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Paid-1-15026626-iteye_blog-2203008.nonecase\"}"}'>
+ Maven-Tycho-Demo：一个示例项目，解释用于Eclipse RCP应用程序的Maven Tycho
+ </a>
+ </dt>
+ <dd><p>一个用于Eclipse RCP应用程序（例如Virtual Satellite）的Maven Tycho演示项目。 项目状态 状态 用于开发构建。 状态 用于集成构建。 状态 为大师建造。 目的 该项目是使虚拟卫星开源的测试设置。 它有助于将软件...</p></dd>
+ </dl>
+ 
+ 
+ 
+ 
+ <dl class=iteye_feed>
+ <dt>
+ <a href=https://download.csdn.net/download/yejuanworld/85449001 target=_blank title=tycho_build_RCP_app.rar.zip data-report-query="utm_medium=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-2-85449001-iteye_blog-2203008.nonecase&amp;depth_1-utm_source=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-2-85449001-iteye_blog-2203008.nonecase" data-report-click='{"mod":"popu_708","dest":"https://download.csdn.net/download/yejuanworld/85449001","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-2-85449001-iteye_blog-2203008.nonecase\"}"}'>
+ tycho_build_RCP_app.rar.zip
+ </a>
+ </dt>
+ <dd><p>eclipse plugin也可支持mvn管理资源完整示例</p></dd>
+ </dl>
+ 
+ 
+ 
+ 
+ <dl class=iteye_feed>
+ <dt>
+ <a href=https://download.csdn.net/download/weixin_42122306/18675640 target=_blank title=xtext-tycho-example:一个如何使用tycho构建xtext项目的示例 data-report-query="utm_medium=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-3-18675640-iteye_blog-2203008.nonecase&amp;depth_1-utm_source=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-3-18675640-iteye_blog-2203008.nonecase" data-report-click='{"mod":"popu_708","dest":"https://download.csdn.net/download/weixin_42122306/18675640","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-3-18675640-iteye_blog-2203008.nonecase\"}"}'>
+ xtext-tycho-example:一个如何使用tycho构建xtext项目的示例
+ </a>
+ </dt>
+ <dd><p>Xtext Tycho示例这是一个演示项目，显示了如何使用tycho / maven构建Xtext项目。 它具有以下特点： 项目基于Xtext和Xtend 2.7.3 在fornax mwe2插件的帮助下从Maven运行xtext生成器mwe2工作流程生成的文件未检入，...</p></dd>
+ </dl>
+ 
+ 
+ 
+ 
+ <dl class=iteye_feed data-report-view='{"mod":"popu_708","dest":"https://download.csdn.net/download/weixin_42122306/19753660","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-4-19753660-iteye_blog-2203008.nonecase\"}"}'>
+ <dt>
+ <a href=https://download.csdn.net/download/weixin_42122306/19753660 target=_blank title=rcp-demo:RCP演示 data-report-query="utm_medium=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-4-19753660-iteye_blog-2203008.nonecase&amp;depth_1-utm_source=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-4-19753660-iteye_blog-2203008.nonecase" data-report-click='{"mod":"popu_708","dest":"https://download.csdn.net/download/weixin_42122306/19753660","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-4-19753660-iteye_blog-2203008.nonecase\"}"}'>
+ rcp-demo:RCP演示
+ </a>
+ </dt>
+ <dd><p>RCP演示RCP 演示应用程序。 应用程序的特征被分成模块，每个模块包含： API - 服务器和客户端之间远程通信的契约服务器 - 服务器实现客户端 - RCP 实现项目结构Common - 包含用于客户端和服务器的库。 杂项 1 模块 1...</p></dd>
+ </dl>
+ 
+ 
+ 
+ 
+ <dl class=iteye_feed data-report-view='{"mod":"popu_708","dest":"https://download.csdn.net/download/LoveForever4/84835110","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-5-84835110-iteye_blog-2203008.nonecase\"}"}'>
+ <dt>
+ <a href=https://download.csdn.net/download/LoveForever4/84835110 target=_blank title=maven-tycho-plugin-0.10.0.jar data-report-query="utm_medium=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-5-84835110-iteye_blog-2203008.nonecase&amp;depth_1-utm_source=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-5-84835110-iteye_blog-2203008.nonecase" data-report-click='{"mod":"popu_708","dest":"https://download.csdn.net/download/LoveForever4/84835110","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-5-84835110-iteye_blog-2203008.nonecase\"}"}'>
+ maven-tycho-plugin-0.10.0.jar
+ </a>
+ </dt>
+ <dd><p>maven-tycho-plugin-0.10.0.jar</p></dd>
+ </dl>
+ 
+ 
+ 
+ 
+ <dl class=iteye_feed data-report-view='{"mod":"popu_708","dest":"https://download.csdn.net/download/weixin_38752628/16737016","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-6-16737016-iteye_blog-2203008.nonecase\"}"}'>
+ <dt>
+ <a href=https://download.csdn.net/download/weixin_38752628/16737016 target=_blank title="Maven-Tycho-Demo:在Eclipse中构建Maven Tycho的部署示例-开源" data-report-query="utm_medium=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-6-16737016-iteye_blog-2203008.nonecase&amp;depth_1-utm_source=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-6-16737016-iteye_blog-2203008.nonecase" data-report-click='{"mod":"popu_708","dest":"https://download.csdn.net/download/weixin_38752628/16737016","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-6-16737016-iteye_blog-2203008.nonecase\"}"}'>
+ Maven-Tycho-Demo:在Eclipse中构建Maven Tycho的部署示例-开源
+ </a>
+ </dt>
+ <dd><p>该项目包含用于Maven-Tycho-Demo项目的已部署文物。 这些工件包含p2和二进制（Windows 64位）构建，用于：-每日开发构建-定期集成构建-特定releaseb构建</p></dd>
+ </dl>
+ 
+ 
+ 
+ 
+ <dl class=iteye_feed data-report-view='{"mod":"popu_708","dest":"https://download.csdn.net/download/weixin_42171132/18312785","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-7-18312785-iteye_blog-2203008.nonecase\"}"}'>
+ <dt>
+ <a href=https://download.csdn.net/download/weixin_42171132/18312785 target=_blank title=tycho-eclipse-plugin-archetype:Maven原型构建基于tycho的eclipse插件 data-report-query="utm_medium=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-7-18312785-iteye_blog-2203008.nonecase&amp;depth_1-utm_source=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-7-18312785-iteye_blog-2203008.nonecase" data-report-click='{"mod":"popu_708","dest":"https://download.csdn.net/download/weixin_42171132/18312785","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-7-18312785-iteye_blog-2203008.nonecase\"}"}'>
+ tycho-eclipse-plugin-archetype:Maven原型构建基于tycho的eclipse插件
+ </a>
+ </dt>
+ <dd><p>tycho-eclipse-plugin-原型这个原型将创建一个具有嵌套结构的多模块项目： __artifactId__ : parent pom project | |---__artifactId__.core : eclipse-plugin | |---__artifactId__.feature: eclipse-feature | |--...</p></dd>
+ </dl>
+ 
+ 
+ 
+ 
+ <dl class=iteye_feed data-report-view='{"mod":"popu_708","dest":"https://download.csdn.net/download/weixin_42098251/19763560","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-8-19763560-iteye_blog-2203008.nonecase\"}"}'>
+ <dt>
+ <a href=https://download.csdn.net/download/weixin_42098251/19763560 target=_blank title="maven-tycho-thirdparty:在 Eclipse 插件中使用第三方依赖与 Maven 和 Tycho" data-report-query="utm_medium=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-8-19763560-iteye_blog-2203008.nonecase&amp;depth_1-utm_source=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-8-19763560-iteye_blog-2203008.nonecase" data-report-click='{"mod":"popu_708","dest":"https://download.csdn.net/download/weixin_42098251/19763560","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-8-19763560-iteye_blog-2203008.nonecase\"}"}'>
+ maven-tycho-thirdparty:在 Eclipse 插件中使用第三方依赖与 Maven 和 Tycho
+ </a>
+ </dt>
+ <dd><p>maven-tycho-第三方 通过 Maven 和 Tycho 在 Eclipse 插件中使用第三方依赖项。 来源 教程： : 源代码： :</p></dd>
+ </dl>
+ 
+ 
+ 
+ 
+ <dl class=iteye_feed data-report-view='{"mod":"popu_708","dest":"https://download.csdn.net/download/weixin_42131261/19009077","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-9-19009077-iteye_blog-2203008.nonecase\"}"}'>
+ <dt>
+ <a href=https://download.csdn.net/download/weixin_42131261/19009077 target=_blank title="eclipse-tycho:Eclipse Tycho测试项目" data-report-query="utm_medium=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-9-19009077-iteye_blog-2203008.nonecase&amp;depth_1-utm_source=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-9-19009077-iteye_blog-2203008.nonecase" data-report-click='{"mod":"popu_708","dest":"https://download.csdn.net/download/weixin_42131261/19009077","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-9-19009077-iteye_blog-2203008.nonecase\"}"}'>
+ eclipse-tycho:Eclipse Tycho测试项目
+ </a>
+ </dt>
+ <dd><p>Eclipse Tycho测试项目</p></dd>
+ </dl>
+ 
+ 
+ 
+ 
+ <dl class=iteye_feed data-report-view='{"mod":"popu_708","dest":"https://download.csdn.net/download/weixin_42131861/18818592","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-10-18818592-iteye_blog-2203008.nonecase\"}"}'>
+ <dt>
+ <a href=https://download.csdn.net/download/weixin_42131861/18818592 target=_blank title="eclipse_rcp_example:repo用于演示功能，片段，测试，tycho等更多功能的完整eclipse rcp开发" data-report-query="utm_medium=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-10-18818592-iteye_blog-2203008.nonecase&amp;depth_1-utm_source=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-10-18818592-iteye_blog-2203008.nonecase" data-report-click='{"mod":"popu_708","dest":"https://download.csdn.net/download/weixin_42131861/18818592","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-10-18818592-iteye_blog-2203008.nonecase\"}"}'>
+ eclipse_rcp_example:repo用于演示功能，片段，测试，tycho等更多功能的完整eclipse rcp开发
+ </a>
+ </dt>
+ <dd><p>eclipse_rcp_example repo用于演示功能，片段，测试，tycho等更多功能的完整eclipse rcp开发。</p></dd>
+ </dl>
+ 
+ 
+ 
+ 
+ <dl class=iteye_feed data-report-view='{"mod":"popu_708","dest":"https://download.csdn.net/download/weixin_42165508/18888252","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-11-18888252-iteye_blog-2203008.nonecase\"}"}'>
+ <dt>
+ <a href=https://download.csdn.net/download/weixin_42165508/18888252 target=_blank title=tycho-buildnumber-issue:测试tycho-packaging-plugin和buildnumber-maven-plugin问题的测试用例 data-report-query="utm_medium=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-11-18888252-iteye_blog-2203008.nonecase&amp;depth_1-utm_source=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-11-18888252-iteye_blog-2203008.nonecase" data-report-click='{"mod":"popu_708","dest":"https://download.csdn.net/download/weixin_42165508/18888252","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-11-18888252-iteye_blog-2203008.nonecase\"}"}'>
+ tycho-buildnumber-issue:测试tycho-packaging-plugin和buildnumber-maven-plugin问题的测试用例
+ </a>
+ </dt>
+ <dd><p>问题似乎是在验证阶段执行tycho-packaging-plugin和buildnumber-maven-plugin目标的顺序：由于buildnumber-maven-plugin首先在POM中声明，因此应该先执行，如所述，并且作为，它应该已在Maven 3.0.3中生效（使用...</p></dd>
+ </dl>
+ 
+ 
+ 
+ 
+ <dl class=iteye_feed data-report-view='{"mod":"popu_708","dest":"https://download.csdn.net/download/weixin_42126274/18657785","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-12-18657785-iteye_blog-2203008.nonecase\"}"}'>
+ <dt>
+ <a href=https://download.csdn.net/download/weixin_42126274/18657785 target=_blank title="p2-maven-plugin:Maven3插件可自动执行Eclipse RCP的第三方依赖关系管理" data-report-query="utm_medium=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-12-18657785-iteye_blog-2203008.nonecase&amp;depth_1-utm_source=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-12-18657785-iteye_blog-2203008.nonecase" data-report-click='{"mod":"popu_708","dest":"https://download.csdn.net/download/weixin_42126274/18657785","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-12-18657785-iteye_blog-2203008.nonecase\"}"}'>
+ p2-maven-plugin:Maven3插件可自动执行Eclipse RCP的第三方依赖关系管理
+ </a>
+ </dt>
+ <dd><p> 好吧，但是，对于这些RCP来说“不幸”的人并不是那么容易……您可能会想为什么呢？ 首先，Eclipse RCP是一个OSGi环境，它扩展了Java依赖关系模型，因此您不能简单地获取一个“ jar”文件并希望它可以工作。 相信我...</p></dd>
+ </dl>
+ 
+ 
+ 
+ 
+ <dl class=iteye_feed data-report-view='{"mod":"popu_708","dest":"https://download.csdn.net/download/LoveForever4/84835346","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-13-84835346-iteye_blog-2203008.nonecase\"}"}'>
+ <dt>
+ <a href=https://download.csdn.net/download/LoveForever4/84835346 target=_blank title=maven-tycho-plugin-0.11.1.jar data-report-query="utm_medium=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-13-84835346-iteye_blog-2203008.nonecase&amp;depth_1-utm_source=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-13-84835346-iteye_blog-2203008.nonecase" data-report-click='{"mod":"popu_708","dest":"https://download.csdn.net/download/LoveForever4/84835346","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-13-84835346-iteye_blog-2203008.nonecase\"}"}'>
+ maven-tycho-plugin-0.11.1.jar
+ </a>
+ </dt>
+ <dd><p>maven-tycho-plugin-0.11.1.jar</p></dd>
+ </dl>
+ 
+ 
+ 
+ 
+ <dl class=iteye_feed data-report-view='{"mod":"popu_708","dest":"https://download.csdn.net/download/LoveForever4/84835226","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-14-84835226-iteye_blog-2203008.nonecase\"}"}'>
+ <dt>
+ <a href=https://download.csdn.net/download/LoveForever4/84835226 target=_blank title=maven-tycho-plugin-0.11.0.jar data-report-query="utm_medium=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-14-84835226-iteye_blog-2203008.nonecase&amp;depth_1-utm_source=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-14-84835226-iteye_blog-2203008.nonecase" data-report-click='{"mod":"popu_708","dest":"https://download.csdn.net/download/LoveForever4/84835226","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-14-84835226-iteye_blog-2203008.nonecase\"}"}'>
+ maven-tycho-plugin-0.11.0.jar
+ </a>
+ </dt>
+ <dd><p>maven-tycho-plugin-0.11.0.jar</p></dd>
+ </dl>
+ 
+ 
+ 
+ 
+ <dl class=iteye_feed data-report-view='{"mod":"popu_708","dest":"https://download.csdn.net/download/LoveForever4/84834961","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-15-84834961-iteye_blog-2203008.nonecase\"}"}'>
+ <dt>
+ <a href=https://download.csdn.net/download/LoveForever4/84834961 target=_blank title=maven-tycho-plugin-0.9.0.jar data-report-query="utm_medium=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-15-84834961-iteye_blog-2203008.nonecase&amp;depth_1-utm_source=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-15-84834961-iteye_blog-2203008.nonecase" data-report-click='{"mod":"popu_708","dest":"https://download.csdn.net/download/LoveForever4/84834961","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-15-84834961-iteye_blog-2203008.nonecase\"}"}'>
+ maven-tycho-plugin-0.9.0.jar
+ </a>
+ </dt>
+ <dd><p>maven-tycho-plugin-0.9.0.jar</p></dd>
+ </dl>
+ 
+ 
+ 
+ 
+ <dl class=iteye_feed data-report-view='{"mod":"popu_708","dest":"https://download.csdn.net/download/LoveForever4/84834815","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-16-84834815-iteye_blog-2203008.nonecase\"}"}'>
+ <dt>
+ <a href=https://download.csdn.net/download/LoveForever4/84834815 target=_blank title=maven-tycho-plugin-0.8.0.jar data-report-query="utm_medium=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-16-84834815-iteye_blog-2203008.nonecase&amp;depth_1-utm_source=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-16-84834815-iteye_blog-2203008.nonecase" data-report-click='{"mod":"popu_708","dest":"https://download.csdn.net/download/LoveForever4/84834815","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-16-84834815-iteye_blog-2203008.nonecase\"}"}'>
+ maven-tycho-plugin-0.8.0.jar
+ </a>
+ </dt>
+ <dd><p>maven-tycho-plugin-0.8.0.jar</p></dd>
+ </dl>
+ 
+ 
+ 
+ 
+ <dl class=iteye_feed data-report-view='{"mod":"popu_708","dest":"https://download.csdn.net/download/LoveForever4/84834642","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-17-84834642-iteye_blog-2203008.nonecase\"}"}'>
+ <dt>
+ <a href=https://download.csdn.net/download/LoveForever4/84834642 target=_blank title=maven-tycho-plugin-0.7.0.jar data-report-query="utm_medium=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-17-84834642-iteye_blog-2203008.nonecase&amp;depth_1-utm_source=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-17-84834642-iteye_blog-2203008.nonecase" data-report-click='{"mod":"popu_708","dest":"https://download.csdn.net/download/LoveForever4/84834642","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-17-84834642-iteye_blog-2203008.nonecase\"}"}'>
+ maven-tycho-plugin-0.7.0.jar
+ </a>
+ </dt>
+ <dd><p>maven-tycho-plugin-0.7.0.jar</p></dd>
+ </dl>
+ 
+ 
+ 
+ 
+ <dl class=iteye_feed data-report-view='{"mod":"popu_708","dest":"https://download.csdn.net/download/LoveForever4/84834456","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-18-84834456-iteye_blog-2203008.nonecase\"}"}'>
+ <dt>
+ <a href=https://download.csdn.net/download/LoveForever4/84834456 target=_blank title=maven-tycho-plugin-0.6.0.jar data-report-query="utm_medium=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-18-84834456-iteye_blog-2203008.nonecase&amp;depth_1-utm_source=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-18-84834456-iteye_blog-2203008.nonecase" data-report-click='{"mod":"popu_708","dest":"https://download.csdn.net/download/LoveForever4/84834456","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-18-84834456-iteye_blog-2203008.nonecase\"}"}'>
+ maven-tycho-plugin-0.6.0.jar
+ </a>
+ </dt>
+ <dd><p>maven-tycho-plugin-0.6.0.jar</p></dd>
+ </dl>
+ 
+ 
+ 
+ 
+ <dl class=iteye_feed data-report-view='{"mod":"popu_708","dest":"https://download.csdn.net/download/LoveForever4/84834263","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-19-84834263-iteye_blog-2203008.nonecase\"}"}'>
+ <dt>
+ <a href=https://download.csdn.net/download/LoveForever4/84834263 target=_blank title=maven-tycho-plugin-0.5.0.jar data-report-query="utm_medium=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-19-84834263-iteye_blog-2203008.nonecase&amp;depth_1-utm_source=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-19-84834263-iteye_blog-2203008.nonecase" data-report-click='{"mod":"popu_708","dest":"https://download.csdn.net/download/LoveForever4/84834263","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-19-84834263-iteye_blog-2203008.nonecase\"}"}'>
+ maven-tycho-plugin-0.5.0.jar
+ </a>
+ </dt>
+ <dd><p>maven-tycho-plugin-0.5.0.jar</p></dd>
+ </dl>
+ 
+ 
+ 
+ 
+ <dl class=iteye_feed data-report-view='{"mod":"popu_708","dest":"https://download.csdn.net/download/zhangyangjixu/12732763","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-20-12732763-iteye_blog-2203008.nonecase\"}"}'>
+ <dt>
+ <a href=https://download.csdn.net/download/zhangyangjixu/12732763 target=_blank title="Bundle JRE along with your Product using Maven Tycho.pdf" data-report-query="utm_medium=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-20-12732763-iteye_blog-2203008.nonecase&amp;depth_1-utm_source=distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-20-12732763-iteye_blog-2203008.nonecase" data-report-click='{"mod":"popu_708","dest":"https://download.csdn.net/download/zhangyangjixu/12732763","strategy":"2~default~OPENSEARCH~Rate","extra":"{\"utm_medium\":\"distribute.pc_relevant_iteye_download.none-task-download-2~default~OPENSEARCH~Rate-20-12732763-iteye_blog-2203008.nonecase\"}"}'>
+ Bundle JRE along with your Product using Maven Tycho.pdf
+ </a>
+ </dt>
+ <dd><p>Maven+Tycho的打包Eclipse Product，图文并茂教程，包括32bit和64bit</p></dd>
+ </dl>
+ 
+ 
+ </div>
+ </div>
+ </div>
+ </ul>
+ </div>
+</div>
+<div class=csdn-side-toolbar>
+ <a class="option-box no—h" href="https://mall.csdn.net/sales/blindboxGL/33?utm_source=vip_blindbox_iteye" target=_blank>
+ <img alt=Magicbox src="data:image/png;base64,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">
+ </a>
+</div>
+<style class=sf-hidden>.csdn-side-toolbar{position:fixed;right:12px;bottom:160px;width:130px;z-index:1999}.csdn-side-toolbar a.option-box img{display:block;width:100%}</style>
+<style class=sf-hidden>#main{margin-bottom:50px}.iteye_feed{padding:10px 10px 10px 10px}.iteye_feed dt{font-size:18px;margin-bottom:5px}.iteye_feed dt a{line-height:22px}.iteye_feed dd{font-size:14px;margin-left:0px}.iteye_feed dd p{font-size:14px;color:#000000;line-height:22px;max-height:42px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}</style>
+ </div>
+ 
+ <div class=blog-sidebar>
+ <div class=blog-sidebar-fixed>
+ <div class=news-right-side>
+ <div class="newbox recommend">
+ <div class=recommend-right>
+ <ul class=recommend-fixed-box>
+ 
+ <li class="right-item cebian_item">
+ <a href=https://www.iteye.com/blog/chnic-2202368 target=_blank>
+ <div class="content clearfix">
+ <h5 title="使用Tycho来构建你的RCP程序(五) —— Plugin Unit Test">使用Tycho来构建你的RCP程序(五) —— Plugin Unit Test</h5>
+ <span class=time>
+ 2015-04-16 14:35
+ </span>
+ <span class="read so_read">
+ <svg class="icon no-active hover-hide" aria-hidden=true>
+ <use xlink:href=#yuedushu></use>
+ </svg>
+ 2278
+ </span>
+ </div>
+ <div class=right-item-desc>
+ 
+通过前面的4篇，我相� ...
+ </div>
+ </a>
+ </li>
+ 
+ <li class="right-item cebian_item">
+ <a href=https://www.iteye.com/blog/chnic-2202025 target=_blank>
+ <div class="content clearfix">
+ <h5 title="使用Tycho来构建你的RCP程序(四) —— Update Site">使用Tycho来构建你的RCP程序(四) —— Update Site</h5>
+ <span class=time>
+ 2015-04-14 17:31
+ </span>
+ <span class="read so_read">
+ <svg class="icon no-active hover-hide" aria-hidden=true>
+ <use xlink:href=#yuedushu></use>
+ </svg>
+ 2042
+ </span>
+ </div>
+ <div class=right-item-desc>
+ 
+在之前的三篇文章当� ...
+ </div>
+ </a>
+ </li>
+ 
+ <li class="right-item cebian_item">
+ <a href=https://www.iteye.com/blog/chnic-2202024 target=_blank>
+ <div class="content clearfix">
+ <h5 title="使用Tycho来构建你的RCP程序(三) —— Product">使用Tycho来构建你的RCP程序(三) —— Product</h5>
+ <span class=time>
+ 2015-04-14 15:56
+ </span>
+ <span class="read so_read">
+ <svg class="icon no-active hover-hide" aria-hidden=true>
+ <use xlink:href=#yuedushu></use>
+ </svg>
+ 3581
+ </span>
+ </div>
+ <div class=right-item-desc>
+ 
+在之前的两篇文章中，我们已经学会了如何如何用Tycho来b ...
+ </div>
+ </a>
+ </li>
+ 
+ <li class="right-item cebian_item">
+ <a href=https://www.iteye.com/blog/chnic-2201998 target=_blank>
+ <div class="content clearfix">
+ <h5 title="使用Tycho来构建你的RCP程序(二) —— Feature ">使用Tycho来构建你的RCP程序(二) —— Feature </h5>
+ <span class=time>
+ 2015-04-13 18:40
+ </span>
+ <span class="read so_read">
+ <svg class="icon no-active hover-hide" aria-hidden=true>
+ <use xlink:href=#yuedushu></use>
+ </svg>
+ 3275
+ </span>
+ </div>
+ <div class=right-item-desc>
+ 
+在上一篇中，我们介绍了如何build一个plugin项目。 ...
+ </div>
+ </a>
+ </li>
+ 
+ <li class="right-item cebian_item">
+ <a href=https://www.iteye.com/blog/chnic-2201139 target=_blank>
+ <div class="content clearfix">
+ <h5 title="使用Tycho来构建你的RCP程序(一) —— Plugin">使用Tycho来构建你的RCP程序(一) —— Plugin</h5>
+ <span class=time>
+ 2015-04-13 17:05
+ </span>
+ <span class="read so_read">
+ <svg class="icon no-active hover-hide" aria-hidden=true>
+ <use xlink:href=#yuedushu></use>
+ </svg>
+ 8954
+ </span>
+ </div>
+ <div class=right-item-desc>
+ 
+因为工作的原因，接触到了一个RCP程序的升级工作（3.4 ...
+ </div>
+ </a>
+ </li>
+ 
+ </ul>
+ </div></div>
+ </div>
+ <div class=persion_article>
+ </div>
+ </div>
+ </div>
+ 
+ </div>
+ 
+ <div id=footer class=clearfix>
+ 
+ <div id=ad_pop class=sf-hidden>
+ 
+ </div>
+ </div>
+ </div>
+ 
+ Global site tag (gtag.js) - Google Analytics
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<webchatgpt-custom-element-5924f1da-cae2-44a5-abef-59658ea5c46d id=webchatgpt-snackbar style=color:rgb(255,255,255)><template shadowrootmode=open><div id=webchatgpt-snackbar-container style=z-index:2147483647></div></template></webchatgpt-custom-element-5924f1da-cae2-44a5-abef-59658ea5c46d><script data-template-shadow-root>(()=>{document.currentScript.remove();processNode(document);function processNode(node){node.querySelectorAll("template[shadowrootmode]").forEach(element=>{let shadowRoot = element.parentElement.shadowRoot;if (!shadowRoot) {try {shadowRoot=element.parentElement.attachShadow({mode:element.getAttribute("shadowrootmode")});shadowRoot.innerHTML=element.innerHTML;element.remove()} catch (error) {} if (shadowRoot) {processNode(shadowRoot)}}})}})()</script>
