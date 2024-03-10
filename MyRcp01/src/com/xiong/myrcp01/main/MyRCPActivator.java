@@ -14,7 +14,7 @@ public class MyRCPActivator extends AbstractUIPlugin {
 
 	// The shared instance
 	private static MyRCPActivator plugin;
-	
+
 	/**
 	 * The constructor
 	 */
@@ -41,7 +41,7 @@ public class MyRCPActivator extends AbstractUIPlugin {
 	public static MyRCPActivator getDefault() {
 		return plugin;
 	}
-	
+
 	public static ImageDescriptor getImageDescriptorFromPlugin(String image) {
 		return imageDescriptorFromPlugin(PLUGIN_ID, image);
 	}

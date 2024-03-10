@@ -32,7 +32,6 @@ public class TestDataBindingDialog extends TitleAreaDialog {
 		super(parentShell);
 	}
 
-
 	@Override
 	protected Control createContents(Composite parent) {
 		Control contents = super.createContents(parent); // 利用父类的方法！
@@ -41,6 +40,12 @@ public class TestDataBindingDialog extends TitleAreaDialog {
 		setTitleImage(MyRCPActivator.getImageDescriptorFromPlugin("/icons/eclipse48.png").createImage());
 
 		return contents;
+	}
+
+	@Override
+	public boolean close() {
+		System.out.println("dialog close...");
+		return super.close();
 	}
 
 	@Override

@@ -22,7 +22,7 @@
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
-            locationURI="menu:org.eclipse.ui.main.menu">
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
          <menu
                id="com.xiong.myrcp01.menu.xiong"
                label="Xiong">
@@ -51,6 +51,176 @@
             class="com.xiong.myrcp01.handler.TestDataBindingHandler"
             commandId="com.xiong.myrcp01.menu.command.testDataBinding">
       </handler>
+   </extension>
+   
+   
+    <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="com.fengmanfei.myrcp.actionSet"
+            label="文件"
+            visible="true">
+         <menu
+               id="fileMenu"
+               label="文件菜单(&amp;F)">
+            <separator name="fileGroup"/>
+            <separator name="toggleGroup"/>
+            <separator name="radioGroup"/>
+         </menu>
+         <action
+               class="com.fengmanfei.myrcp.actions.SampleAction"
+               icon="icons/sample.gif"
+               id="com.fengmanfei.myrcp.actions.SampleAction"
+               label="新建(&amp;N)"
+               menubarPath="fileMenu/fileGroup"
+               toolbarPath="fileGroup"
+               tooltip="Hello，Eclipse world"/>
+         <action
+               class="com.fengmanfei.myrcp.actions.SampleAction"
+               icon="icons/sample.gif"
+               id="com.fengmanfei.myrcp.actions.OneAction"
+               label="Toggle One"
+               menubarPath="fileMenu/toggleGroup"
+               style="toggle"
+               toolbarPath="toggleGroup"
+               tooltip="aciton one"/>
+         <action
+               class="com.fengmanfei.myrcp.actions.SampleAction"
+               icon="icons/sample.gif"
+               id="com.fengmanfei.myrcp.actions.TwoAction"
+               label="Toggle Two"
+               menubarPath="fileMenu/toggleGroup"
+               style="toggle"
+               toolbarPath="toggleGroup"
+               tooltip="action two"/>
+         <action
+               class="com.fengmanfei.myrcp.actions.SampleAction"
+               icon="icons/sample.gif"
+               id="com.fengmanfei.myrcp.actions.RadioAction"
+               label="Radio One"
+               menubarPath="fileMenu/radioGroup"
+               style="radio"
+               tooltip="radio one"/>
+         <menu
+               id="twoMenu"
+               label="Two Menu"
+               path="fileMenu">
+            <separator name="editGroup"/>
+         </menu>
+         <action
+               class="com.fengmanfei.myrcp.actions.SampleAction"
+               icon="icons/sample.gif"
+               id="com.fengmanfei.myrcp.actions.PushAction"
+               label="Push"
+               menubarPath="twoMenu/editGroup"
+               style="push"
+               toolbarPath="editGroup"
+               tooltip="push"/>
+      </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="myGroup"
+            name="样本类别"/>
+      <view
+            allowMultiple="true"
+            category="myGroup"
+            class="com.fengmanfei.myrcp.views.SampleView"
+            icon="icons/sample.gif"
+            id="com.fengmanfei.myrcp.views.SampleView"
+            name="样本视图"/>
+      <view
+            allowMultiple="true"
+            class="com.fengmanfei.myrcp.views.AnotherView"
+            id="com.fengmanfei.myrcp.views.AnotherView"
+            name="另一个视图"/>
+      <view
+            class="com.fengmanfei.myrcp.views.OpenEditorView"
+            icon="icons/samples.gif"
+            id="com.fengmanfei.myrcp.views.OpenEditorView"
+            name="打开编辑器"/>
+      <view
+            class="com.fengmanfei.myrcp.views.MyFormView"
+            icon="icons/samples.gif"
+            id="com.fengmanfei.myrcp.views.MyFormView"
+            name="表单视图"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="com.fengmanfei.myrcp.editors.JsEditor"
+            contributorClass="com.fengmanfei.myrcp.editors.JsEditorContributor"
+            default="false"
+            icon="icons/samples.gif"
+            id="com.fengmanfei.myrcp.editors.JsEditor"
+            name="JsEditor"/>
+      <editor
+            class="com.fengmanfei.myrcp.editors.MutiEditorSample"
+            default="false"
+            icon="icons/samples.gif"
+            id="com.fengmanfei.myrcp.editors.MutiEditorSample"
+            name="多页编辑器"/>
+      <editor
+            class="com.fengmanfei.myrcp.forms.MyMutiForm"
+            default="false"
+            icon="icons/samples.gif"
+            id="com.fengmanfei.myrcp.forms.MyMutiForm"
+            name="表单编辑器"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="com.fengmanfei.myrcp.MyPerspective"
+            icon="icons/samples.gif"
+            id="com.fengmanfei.myrcp.MyPerspective"
+            name="自定义透视图"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="com.fengmanfei.myrcp.preferences.SamplePreferencePage"
+            id="com.fengmanfei.myrcp.preferences.SamplePreferencePage"
+            name="样本首选项">
+         <keywordReference id="样本"/>
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer class="com.fengmanfei.myrcp.preferences.PreferenceInitializer"/>
+   </extension>
+   <extension
+         point="org.eclipse.help.toc">
+      <toc
+            file="toc.xml"
+            primary="true"/>
+      <toc file="tocconcepts.xml"/>
+      <toc file="tocgettingstarted.xml"/>
+      <toc file="tocreference.xml"/>
+      <toc file="tocsamples.xml"/>
+      <toc file="toctasks.xml"/>
+      <index path="html/reference/maintopic.html"/>
+   </extension>
+   <extension
+         point="org.eclipse.help.contexts">
+      <contexts file="SampleViewHelp.xml"/>
+   </extension>
+   <extension
+         id="myrcp"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="com.fengmanfei.myrcp.application"
+            name="myrcp">
+         <property
+               name="aboutImage"
+               value="icons/about.gif"/>
+         <property
+               name="aboutText"
+               value="关于RCP演示程序&#x0A;作者:Janet"/>
+         <property
+               name="windowImages"
+               value="icons/members.gif,icons/eclipse32.gif"/>
+      </product>
    </extension>
 
 </plugin>
