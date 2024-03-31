@@ -15,7 +15,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jface,
  org.eclipse.ui.forms;bundle-version="3.13.100",
  org.eclipse.ui.editors;bundle-version="3.17.100"
-Bundle-RequiredExecutionEnvironment: JavaSE-16
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8,
+ JavaSE-14,
+ JavaSE-17
 Automatic-Module-Name: MyRcp01
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Xiong
